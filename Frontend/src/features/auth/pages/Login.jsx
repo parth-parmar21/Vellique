@@ -9,8 +9,6 @@ const Login = () => {
         password: '',
     })
 
-    console.log(formData);
-
 
     const navigate = useNavigate()
 

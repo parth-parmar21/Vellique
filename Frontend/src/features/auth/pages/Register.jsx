@@ -369,7 +369,10 @@ const Register = () => {
                                 isSeller
                             </span>
                         </div>
-
+                                {/* testing */}
+                                <a href="/api/auth/google"
+                                className='text-sm underline'
+                                >Sign in with Google</a>
                         {/* submit */}
                         <button
                             type="submit"
