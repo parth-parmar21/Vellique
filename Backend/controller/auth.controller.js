@@ -52,7 +52,7 @@ export async function register(req, res) {
 
 export async function login(req, res) {
     const { email, password } = req.body;
-console.log(email, password);
+    console.log(email, password);
 
     const user = await User.findOne({
         email
@@ -73,7 +73,31 @@ console.log(email, password);
 
 
 export async function googleCallback(req, res) {
-    console.log(req.user);
-    
-    res.redirect("http://localhost:5173/dashboard")
+    const { id, displayName, emails, photos } = req.user;
+
+    const email = emails[0].value;
+    const profilePicture = photos[0].value;
+
+    let user = await User.findOne({
+        email
+    })
+
+    if (!user) {
+        user = await User.create({
+            email,
+            fullName: displayName,
+            contact: null,
+            googleId: id
+        });
+    }
+
+    const token = jwt.sign({
+        id: user._id,
+    }, config.JWT_SECRET_KEY, {
+        expiresIn: "7d",
+    });
+
+    res.cookie("token", token);
+
+    res.redirect("http://localhost:5173/")
 }

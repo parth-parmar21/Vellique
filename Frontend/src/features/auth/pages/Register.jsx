@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useAuth } from '../hook/useAuth'
 import { useNavigate } from 'react-router-dom'
+import ContinueWithGoogle from '../components/ContinueWithGoogle'
 
 const Register = () => {
     const { handleRegister} = useAuth()
@@ -184,7 +185,7 @@ const Register = () => {
                 style={{ padding: '48px 32px' }}
             >
                 {/* mobile-only brand mark */}
-                <div className="lg:hidden mb-10 text-center">
+                <div className="lg:hidden mb-2 text-center">
                     <span
                         style={{
                             fontFamily: 'Montserrat, sans-serif',
@@ -216,20 +217,10 @@ const Register = () => {
                         >
                             Create Your Account
                         </h1>
-                        <p
-                            style={{
-                                fontFamily: 'Inter, sans-serif',
-                                fontSize: '13px',
-                                color: '#6b6055',
-                                letterSpacing: '0.04em',
-                            }}
-                        >
-                            Join Vellique — discover fashion made for you.
-                        </p>
                     </header>
 
                     {/* form */}
-                    <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '22px' }}>
+                    <form onSubmit={handleSubmit} className='flex flex-col gap-4'>
 
                             {/* Full Name */}
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
@@ -369,10 +360,7 @@ const Register = () => {
                                 isSeller
                             </span>
                         </div>
-                                {/* testing */}
-                                <a href="/api/auth/google"
-                                className='text-sm underline'
-                                >Sign in with Google</a>
+
                         {/* submit */}
                         <button
                             type="submit"
@@ -398,6 +386,7 @@ const Register = () => {
                         >
                             Create Account
                         </button>
+                        <ContinueWithGoogle />
 
                         {/* sign in link */}
                         <p

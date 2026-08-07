@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useAuth } from '../hook/useAuth'
 import { useNavigate } from 'react-router-dom'
+import ContinueWithGoogle from '../components/ContinueWithGoogle'
 
 const Login = () => {
     const { handleLogin } = useAuth()
@@ -238,7 +239,6 @@ const Login = () => {
                                 placeholder="john@example.com"
                                 value={formData.email}
                                 onChange={handleChange}
-                                required
                                 autoComplete="off"
                                 style={inputStyle}
                                 onFocus={handleFocus}
@@ -258,7 +258,6 @@ const Login = () => {
                                 placeholder="••••••••"
                                 value={formData.password}
                                 onChange={handleChange}
-                                required
                                 autoComplete="off"
                                 style={inputStyle}
                                 onFocus={handleFocus}
@@ -292,6 +291,7 @@ const Login = () => {
                         >
                             Sign In
                         </button>
+                        <ContinueWithGoogle />
 
                         {/* sign up link */}
                         <p
