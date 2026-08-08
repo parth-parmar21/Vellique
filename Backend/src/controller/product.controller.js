@@ -30,3 +30,24 @@ export async function createProduct(req, res) {
         product
     });
 }
+
+export async function getSellerProducts(req, res) {
+    const seller = req.user
+
+    const products = await Product.find({
+        seller: seller._id
+    })
+
+    if (!products) {
+        return res.status(404).json({
+            message: "No products found for this seller",
+            success: false
+        });
+    }
+
+    res.status(200).json({
+        message: "Products retrieved successfully",
+        success: true,
+        products
+    }); 
+}
