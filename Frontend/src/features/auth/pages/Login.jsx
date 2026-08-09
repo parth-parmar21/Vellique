@@ -36,9 +36,10 @@ const Login = () => {
         padding: '12px 16px',
         fontSize: '14px',
         fontFamily: 'Inter, sans-serif',
-        color: '#e5e2e1',
+        color: '#211E1A',
         outline: 'none',
         transition: 'border-color 0.2s, box-shadow 0.2s',
+        backgroundColor: 'white'
     }
 
     const labelStyle = {
@@ -61,196 +62,125 @@ const Login = () => {
     }
 
     return (
-        <div
-            className="h-screen flex"
-            style={{ backgroundColor: '#0d0d0d', fontFamily: 'Inter, sans-serif' }}
-        >
+        <div className="h-screen w-full flex flex-col lg:flex-row overflow-hidden bg-[#F8F5F0] text-[#211E1A] font-sans antialiased">
+
             {/* ════════════════════════════════════════
-                LEFT PANEL — brand visual (desktop only)
-            ════════════════════════════════════════ */}
-            <aside
-                className="hidden lg:flex lg:w-1/2 xl:w-[55%] relative flex-col justify-between overflow-hidden"
-                style={{ minHeight: '100vh' }}
-            >
-                {/* background image */}
+            LEFT PANEL — Editorial Fashion Visual
+        ════════════════════════════════════════ */}
+            <aside className="hidden lg:flex lg:w-1/2 xl:w-[48%] relative flex-col justify-between overflow-hidden bg-[#1c1a17]">
+
+                {/* Background Image */}
                 <img
-                    src="/fashion-panel.png"
+                    src="https://i.pinimg.com/736x/8a/fb/41/8afb41f60ff7ebdf89de13cf0e543c9f.jpg"
                     alt="Vellique fashion"
-                    style={{
-                        position: 'absolute',
-                        inset: 0,
-                        width: '100%',
-                        height: '100%',
-                        objectFit: 'cover',
-                        objectPosition: 'center',
-                        opacity: 0.55,
-                    }}
+                    className="absolute inset-0 w-full h-full object-cover object-top opacity-90"
                 />
 
-                {/* dark gradient overlays */}
-                <div
-                    style={{
-                        position: 'absolute',
-                        inset: 0,
-                        background: 'linear-gradient(135deg, #0d0d0d 0%, transparent 60%)',
-                    }}
-                />
-                <div
-                    style={{
-                        position: 'absolute',
-                        inset: 0,
-                        background: 'linear-gradient(to right, #0d0d0d 0%, transparent 35%)',
-                    }}
-                />
-                <div
-                    style={{
-                        position: 'absolute',
-                        bottom: 0,
-                        left: 0,
-                        right: 0,
-                        height: '40%',
-                        background: 'linear-gradient(to top, #0d0d0d 0%, transparent 100%)',
-                    }}
-                />
+                {/* Warm Editorial Overlays */}
+                <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/60 pointer-events-none" />
+                <div className="absolute inset-0 bg-gradient-to-r from-black/30 via-transparent to-transparent pointer-events-none" />
 
-                {/* top brand mark */}
-                <div className="relative z-10 p-10 xl:p-14">
-                    <span
-                        style={{
-                            fontFamily: 'Montserrat, sans-serif',
-                            fontSize: '13px',
-                            fontWeight: 700,
-                            letterSpacing: '0.35em',
-                            textTransform: 'uppercase',
-                            color: '#f5c518',
-                        }}
-                    >
-                        Vellique
+                {/* Brand */}
+                <div className="relative z-10 px-8 py-7 xl:px-10 xl:py-8">
+                    <span className="font-serif text-white text-lg tracking-[0.25em] uppercase font-normal">
+                        VELLIQUE
                     </span>
                 </div>
 
-                {/* bottom editorial copy */}
-                <div className="relative z-10 p-10 xl:p-14">
-                    {/* golden accent line */}
-                    <div
-                        style={{
-                            width: '36px',
-                            height: '2px',
-                            backgroundColor: '#f5c518',
-                            marginBottom: '24px',
-                        }}
-                    />
-                    <p
-                        style={{
-                            fontFamily: 'Montserrat, sans-serif',
-                            fontSize: '30px',
-                            fontWeight: 700,
-                            lineHeight: 1.25,
-                            letterSpacing: '-0.01em',
-                            color: '#e5e2e1',
-                            maxWidth: '320px',
-                            marginBottom: '16px',
-                        }}
-                    >
-                        Welcome Back
+                {/* Editorial Copy */}
+                <div className="relative z-10 px-8 py-8 xl:px-10 xl:py-9">
+
+                    <h2 className="font-serif text-white text-3xl xl:text-[40px] font-normal leading-[1.1] tracking-tight mb-3">
+                        Welcome back
                         <br />
                         to Vellique.
+                    </h2>
+
+                    <p className="text-white/80 font-sans text-xs xl:text-sm font-light leading-relaxed max-w-sm tracking-wide">
+                        Continue exploring premium fashion, thoughtfully curated for you.
                     </p>
-                    <p
-                        style={{
-                            fontFamily: 'Inter, sans-serif',
-                            fontSize: '13px',
-                            lineHeight: 1.7,
-                            color: '#9a9078',
-                            maxWidth: '260px',
-                        }}
-                    >
-                        Continue exploring premium fashion,
-                        <br />
-                        thoughtfully curated for you.
-                    </p>
+
                 </div>
+
             </aside>
 
+
             {/* ════════════════════════════════════════
-                RIGHT PANEL — form
-            ════════════════════════════════════════ */}
-            <main
-                className="flex-1 flex flex-col justify-center min-h-screen"
-                style={{ padding: '48px 32px' }}
-            >
-                {/* mobile-only brand mark */}
-                <div className="lg:hidden mb-10 text-center">
-                    <span
-                        style={{
-                            fontFamily: 'Montserrat, sans-serif',
-                            fontSize: '13px',
-                            fontWeight: 700,
-                            letterSpacing: '0.35em',
-                            textTransform: 'uppercase',
-                            color: '#f5c518',
-                        }}
-                    >
-                        Vellique
-                    </span>
-                </div>
+            RIGHT PANEL — Login Form
+        ════════════════════════════════════════ */}
+            <main className="flex-1 h-screen flex items-center justify-center overflow-y-auto bg-[#F8F5F0] px-5 py-6 sm:px-8 lg:px-10 xl:px-14">
 
-                <div style={{ maxWidth: '440px', width: '100%', margin: '0 auto' }}>
+                <div className="w-full max-w-[410px]">
 
-                    {/* heading */}
-                    <header style={{ marginBottom: '20px' }}>
-                        <h1
-                            style={{
-                                fontFamily: 'Montserrat, sans-serif',
-                                fontSize: '26px',
-                                fontWeight: 700,
-                                color: '#e5e2e1',
-                                letterSpacing: '-0.01em',
-                                lineHeight: 1.3,
-                                marginBottom: '8px',
-                            }}
-                        >
-                            Sign In to Vellique
+                    {/* Mobile Brand */}
+                    <div className="lg:hidden text-center mb-5">
+                        <span className="font-serif text-[#9D782F] text-lg tracking-[0.25em] uppercase font-medium">
+                            VELLIQUE
+                        </span>
+                    </div>
+
+
+                    {/* Header */}
+                    <header className="text-center mb-6">
+
+                        <span className="text-[9px] sm:text-[15px] font-mono uppercase tracking-[0.1em] text-[#9D782F] font-semibold block mb-1.5">
+                            WELCOME BACK
+                        </span>
+
+                        <h1 className="text-[28px] sm:text-4xl font-serif text-[#211E1A] font-normal tracking-tight mb-1.5">
+                            Sign in to Vellique
                         </h1>
-                        <p
-                            style={{
-                                fontFamily: 'Inter, sans-serif',
-                                fontSize: '13px',
-                                color: '#6b6055',
-                                letterSpacing: '0.04em',
-                            }}
-                        >
+
+                        <p className="text-[11px] sm:text-xs text-[#756E63] font-light leading-relaxed">
                             Welcome back! Please enter your details.
                         </p>
+
                     </header>
 
-                    {/* form */}
-                    <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '22px' }}>
+
+                    {/* Login Form */}
+                    <form
+                        onSubmit={handleSubmit}
+                        className="flex flex-col gap-4"
+                    >
 
                         {/* Email */}
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                            <label htmlFor="email" style={labelStyle}>
-                                Email
+                        <div className="flex flex-col gap-1">
+
+                            <label
+                                htmlFor="email"
+                                className="text-[9px] font-semibold font-mono tracking-[0.18em] uppercase text-[#211E1A]"
+                            >
+                                EMAIL
                             </label>
+
                             <input
                                 id="email"
                                 name="email"
                                 type="email"
-                                placeholder="john@example.com"
+                                placeholder="jane@example.com"
                                 value={formData.email}
                                 onChange={handleChange}
                                 autoComplete="off"
-                                style={inputStyle}
+                                required
+                                className="w-full h-[42px] bg-white border border-[#DDD6CA] px-3.5 text-[13px] text-[#211E1A] placeholder-[#999083] outline-none rounded-none focus:border-[#9D782F] transition-colors duration-200"
                                 onFocus={handleFocus}
                                 onBlur={handleBlur}
                             />
+
                         </div>
 
+
                         {/* Password */}
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                            <label htmlFor="password" style={labelStyle}>
-                                Password
+                        <div className="flex flex-col gap-1">
+
+                            <label
+                                htmlFor="password"
+                                className="text-[9px] font-semibold font-mono tracking-[0.18em] uppercase text-[#211E1A]"
+                            >
+                                PASSWORD
                             </label>
+
                             <input
                                 id="password"
                                 name="password"
@@ -259,69 +189,48 @@ const Login = () => {
                                 value={formData.password}
                                 onChange={handleChange}
                                 autoComplete="off"
-                                style={inputStyle}
+                                required
+                                className="w-full h-[42px] bg-white border border-[#DDD6CA] px-3.5 text-[13px] text-[#211E1A] placeholder-[#999083] outline-none rounded-none focus:border-[#9D782F] transition-colors duration-200"
                                 onFocus={handleFocus}
                                 onBlur={handleBlur}
                             />
+
                         </div>
 
-                        {/* submit */}
+
+                        {/* Sign In Button */}
                         <button
                             type="submit"
-                            style={{
-                                width: '100%',
-                                padding: '15px 24px',
-                                borderRadius: '4px',
-                                border: 'none',
-                                backgroundColor: '#f5c518',
-                                color: '#0d0d0d',
-                                fontSize: '12px',
-                                fontWeight: 700,
-                                fontFamily: 'Inter, sans-serif',
-                                letterSpacing: '0.14em',
-                                textTransform: 'uppercase',
-                                cursor: 'pointer',
-                                transition: 'background-color 0.2s, transform 0.1s',
-                                marginTop: '10px',
-                            }}
-                            onMouseEnter={e => e.currentTarget.style.backgroundColor = '#ffe08b'}
-                            onMouseLeave={e => e.currentTarget.style.backgroundColor = '#f5c518'}
-                            onMouseDown={e => e.currentTarget.style.transform = 'scale(0.99)'}
-                            onMouseUp={e => e.currentTarget.style.transform = 'scale(1)'}
+                            className="w-full h-[44px] bg-[#9D782F] hover:bg-[#8A6827] text-white font-mono text-[10px] font-bold tracking-[0.18em] uppercase rounded-none shadow-sm transition-colors duration-200 cursor-pointer mt-1"
                         >
-                            Sign In
+                            SIGN IN
                         </button>
+
+
+                        {/* Google */}
                         <ContinueWithGoogle />
 
-                        {/* sign up link */}
-                        <p
-                            style={{
-                                textAlign: 'center',
-                                fontSize: '12px',
-                                color: '#6b6055',
-                                marginTop: '4px',
-                            }}
-                        >
-                            Don't have an account?{' '}
+
+                        {/* Sign Up */}
+                        <p className="text-center text-[11px] text-[#756E63] mt-1 font-light">
+
+                            Don't have an account?
+
                             <a
                                 href="/register"
-                                style={{
-                                    color: '#f5c518',
-                                    fontWeight: 500,
-                                    textDecoration: 'underline',
-                                    textUnderlineOffset: '3px',
-                                    textDecorationThickness: '1px',
-                                }}
-                                onMouseEnter={e => e.currentTarget.style.color = '#ffe08b'}
-                                onMouseLeave={e => e.currentTarget.style.color = '#f5c518'}
+                                className="text-[#9D782F] font-medium hover:underline transition-colors ml-1"
                             >
                                 Register
                             </a>
+
                         </p>
 
                     </form>
+
                 </div>
+
             </main>
+
         </div>
     )
 }

@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import ContinueWithGoogle from '../components/ContinueWithGoogle'
 
 const Register = () => {
-    const { handleRegister} = useAuth()
+    const { handleRegister } = useAuth()
     const [formData, setFormData] = useState({
         fullName: '',
         email: '',
@@ -12,6 +12,8 @@ const Register = () => {
         password: '',
         isSeller: false,
     })
+
+    const [showPassword, setShowPassword] = useState(false)
 
     const navigate = useNavigate()
 
@@ -33,392 +35,317 @@ const Register = () => {
         navigate('/login')
     }
 
-    const inputStyle = {
-        width: '100%',
-        backgroundColor: '#0d0d0d',
-        border: '1px solid #2e2e2e',
-        borderRadius: '4px',
-        padding: '12px 16px',
-        fontSize: '14px',
-        fontFamily: 'Inter, sans-serif',
-        color: '#e5e2e1',
-        outline: 'none',
-        transition: 'border-color 0.2s, box-shadow 0.2s',
-    }
-
-    const labelStyle = {
-        fontFamily: 'Inter, sans-serif',
-        fontSize: '10px',
-        fontWeight: 600,
-        letterSpacing: '0.18em',
-        textTransform: 'uppercase',
-        color: '#9a9078',
-    }
-
-    const handleFocus = e => {
-        e.target.style.borderColor = '#f5c518'
-        e.target.style.boxShadow = '0 0 0 1px #f5c51840'
-    }
-
-    const handleBlur = e => {
-        e.target.style.borderColor = '#2e2e2e'
-        e.target.style.boxShadow = 'none'
-    }
-
     return (
-        <div
-            className="h-screen flex"
-            style={{ backgroundColor: '#0d0d0d', fontFamily: 'Inter, sans-serif' }}
-        >
+        <div className="h-screen w-full flex flex-col lg:flex-row overflow-hidden bg-[#F8F5F0] text-[#211E1A] font-sans antialiased selection:bg-[#9D782F] selection:text-white">
+
             {/* ════════════════════════════════════════
-                LEFT PANEL — brand visual (desktop only)
-            ════════════════════════════════════════ */}
-            <aside
-                className="hidden lg:flex lg:w-1/2 xl:w-[55%] relative flex-col justify-between overflow-hidden"
-                style={{ minHeight: '100vh' }}
-            >
-                {/* background image */}
+            LEFT PANEL — Editorial Fashion Visual
+        ════════════════════════════════════════ */}
+            <aside className="hidden lg:flex lg:w-1/2 xl:w-[48%] relative flex-col justify-between overflow-hidden bg-[#1c1a17]">
+
                 <img
-                    src="/fashion-panel.png"
-                    alt="Vellique fashion"
-                    style={{
-                        position: 'absolute',
-                        inset: 0,
-                        width: '100%',
-                        height: '100%',
-                        objectFit: 'cover',
-                        objectPosition: 'center',
-                        opacity: 0.55,
-                    }}
+                    src="https://i.pinimg.com/736x/05/1b/f7/051bf793b1c5bbc349bd916f5998fa36.jpg"
+                    alt="Vellique editorial coat fashion"
+                    className="absolute inset-0 w-full h-full object-cover object-top opacity-90"
                 />
 
-                {/* dark gradient overlays */}
-                <div
-                    style={{
-                        position: 'absolute',
-                        inset: 0,
-                        background: 'linear-gradient(135deg, #0d0d0d 0%, transparent 60%)',
-                    }}
-                />
-                <div
-                    style={{
-                        position: 'absolute',
-                        inset: 0,
-                        background: 'linear-gradient(to right, #0d0d0d 0%, transparent 35%)',
-                    }}
-                />
-                <div
-                    style={{
-                        position: 'absolute',
-                        bottom: 0,
-                        left: 0,
-                        right: 0,
-                        height: '40%',
-                        background: 'linear-gradient(to top, #0d0d0d 0%, transparent 100%)',
-                    }}
-                />
+                {/* Editorial overlays */}
+                <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/60 pointer-events-none" />
+                <div className="absolute inset-0 bg-gradient-to-r from-black/30 via-transparent to-transparent pointer-events-none" />
 
-                {/* top brand mark */}
-                <div className="relative z-10 p-10 xl:p-14">
-                    <span
-                        style={{
-                            fontFamily: 'Montserrat, sans-serif',
-                            fontSize: '13px',
-                            fontWeight: 700,
-                            letterSpacing: '0.35em',
-                            textTransform: 'uppercase',
-                            color: '#f5c518',
-                        }}
-                    >
-                        Vellique
+                {/* Brand */}
+                <div className="relative z-10 px-8 py-7 xl:px-10 xl:py-8">
+                    <span className="font-serif text-white text-lg tracking-[0.25em] uppercase font-normal">
+                        VELLIQUE
                     </span>
                 </div>
 
-                {/* bottom editorial copy */}
-                <div className="relative z-10 p-10 xl:p-14">
-                    {/* golden accent line */}
-                    <div
-                        style={{
-                            width: '36px',
-                            height: '2px',
-                            backgroundColor: '#f5c518',
-                            marginBottom: '24px',
-                        }}
-                    />
-                    <p
-                        style={{
-                            fontFamily: 'Montserrat, sans-serif',
-                            fontSize: '30px',
-                            fontWeight: 700,
-                            lineHeight: 1.25,
-                            letterSpacing: '-0.01em',
-                            color: '#e5e2e1',
-                            maxWidth: '320px',
-                            marginBottom: '16px',
-                        }}
-                    >
+                {/* Editorial Text */}
+                <div className="relative z-10 px-8 py-8 xl:px-10 xl:py-9">
+                    <h2 className="font-serif text-white text-3xl xl:text-[40px] font-normal leading-[1.1] tracking-tight mb-3">
                         Dress the story
                         <br />
                         you want to tell.
-                    </p>
-                    <p
-                        style={{
-                            fontFamily: 'Inter, sans-serif',
-                            fontSize: '13px',
-                            lineHeight: 1.7,
-                            color: '#9a9078',
-                            maxWidth: '260px',
-                        }}
-                    >
-                        Premium fashion, thoughtfully curated
-                        <br />
-                        for the modern wardrobe.
+                    </h2>
+
+                    <p className="text-white/80 font-sans text-xs xl:text-sm font-light leading-relaxed max-w-sm tracking-wide">
+                        Premium fashion, thoughtfully curated for the modern wardrobe.
                     </p>
                 </div>
             </aside>
 
+
             {/* ════════════════════════════════════════
-                RIGHT PANEL — form
-            ════════════════════════════════════════ */}
-            <main
-                className="flex-1 flex flex-col justify-center min-h-screen"
-                style={{ padding: '48px 32px' }}
-            >
-                {/* mobile-only brand mark */}
-                <div className="lg:hidden mb-2 text-center">
-                    <span
-                        style={{
-                            fontFamily: 'Montserrat, sans-serif',
-                            fontSize: '13px',
-                            fontWeight: 700,
-                            letterSpacing: '0.35em',
-                            textTransform: 'uppercase',
-                            color: '#f5c518',
-                        }}
-                    >
-                        Vellique
-                    </span>
-                </div>
+            RIGHT PANEL — Registration
+        ════════════════════════════════════════ */}
+            <main className="flex-1 h-screen flex items-center justify-center overflow-y-auto bg-[#F8F5F0] px-5 py-6 sm:px-8 lg:px-10 xl:px-14">
 
-                <div style={{ maxWidth: '440px', width: '100%', margin: '0 auto' }}>
+                {/* Mobile Brand */}
+                <div className="w-full max-w-102.5">
 
-                    {/* heading */}
-                    <header style={{ marginBottom: '20px' }}>
-                        <h1
-                            style={{
-                                fontFamily: 'Montserrat, sans-serif',
-                                fontSize: '26px',
-                                fontWeight: 700,
-                                color: '#e5e2e1',
-                                letterSpacing: '-0.01em',
-                                lineHeight: 1.3,
-                                marginBottom: '8px',
-                            }}
+                    <div className="lg:hidden text-center mb-5">
+                        <span className="font-serif text-[#9D782F] text-lg tracking-[0.25em] uppercase font-medium">
+                            VELLIQUE
+                        </span>
+                    </div>
+
+                    {/* Form Container */}
+                    <div className="w-full">
+
+                        {/* Header */}
+                        <header className="text-center mb-5">
+
+                            <span className="text-[9px] sm:text-[10px] font-mono uppercase tracking-[0.25em] text-[#9D782F] font-semibold block mb-1.5">
+                                WELCOME TO VELLIQUE
+                            </span>
+
+                            <h1 className="sm:text-4xl font-serif text-[#211E1A] font-normal tracking-tight mb-1.5">
+                                Create your account
+                            </h1>
+
+                            <p className="text-[11px] sm:text-xs text-[#756E63] font-light leading-relaxed">
+                                Join Vellique and discover a more considered wardrobe.
+                            </p>
+
+                        </header>
+
+
+                        {/* ═══════════════════════
+                        REGISTRATION FORM
+                    ═══════════════════════ */}
+                        <form
+                            onSubmit={handleSubmit}
+                            className="flex flex-col gap-3.5"
                         >
-                            Create Your Account
-                        </h1>
-                    </header>
-
-                    {/* form */}
-                    <form onSubmit={handleSubmit} className='flex flex-col gap-4'>
 
                             {/* Full Name */}
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                                <label htmlFor="fullName" style={labelStyle}>
-                                    Full Name
+                            <div className="flex flex-col gap-1">
+
+                                <label
+                                    htmlFor="fullName"
+                                    className="text-[10px] font-semibold font-mono tracking-[0.18em] uppercase text-[#211E1A]"
+                                >
+                                    FULL NAME
                                 </label>
+
                                 <input
                                     id="fullName"
                                     name="fullName"
                                     type="text"
-                                    placeholder="John Doe"
+                                    placeholder="Jane Doe"
                                     value={formData.fullName}
                                     onChange={handleChange}
                                     required
                                     autoComplete="off"
-                                    style={inputStyle}
-                                    onFocus={handleFocus}
-                                    onBlur={handleBlur}
+                                    className="w-full h-10.5 bg-white border border-[#DDD6CA] px-3.5 text-[13px] text-[#211E1A] placeholder-[#999083] outline-none rounded-none focus:border-[#9D782F] transition-colors duration-200"
                                 />
+
                             </div>
 
-                            {/* Contact No. */}
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                                <label htmlFor="contactNo" style={labelStyle}>
-                                    Contact No.
+
+                            {/* Contact Number */}
+                            <div className="flex flex-col gap-1">
+
+                                <label
+                                    htmlFor="contactNo"
+                                    className="text-[9px] font-semibold font-mono tracking-[0.18em] uppercase text-[#211E1A]"
+                                >
+                                    CONTACT NUMBER
                                 </label>
+
                                 <input
                                     id="contactNo"
                                     name="contactNo"
                                     type="tel"
-                                    placeholder="+91 98765 43210"
+                                    placeholder="+1 (555) 000-0000"
                                     value={formData.contactNo}
                                     onChange={handleChange}
                                     autoComplete="off"
-                                    style={inputStyle}
-                                    onFocus={handleFocus}
-                                    onBlur={handleBlur}
+                                    className="w-full h-10.5 bg-white border border-[#DDD6CA] px-3.5 text-[13px] text-[#211E1A] placeholder-[#999083] outline-none rounded-none focus:border-[#9D782F] transition-colors duration-200"
                                 />
+
                             </div>
 
-                        {/* Email */}
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                            <label htmlFor="email" style={labelStyle}>
-                                Email
-                            </label>
-                            <input
-                                id="email"
-                                name="email"
-                                type="email"
-                                placeholder="john@example.com"
-                                value={formData.email}
-                                onChange={handleChange}
-                                required
-                                autoComplete="off"
-                                style={inputStyle}
-                                onFocus={handleFocus}
-                                onBlur={handleBlur}
-                            />
-                        </div>
 
-                        {/* Password */}
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                            <label htmlFor="password" style={labelStyle}>
-                                Password
-                            </label>
-                            <input
-                                id="password"
-                                name="password"
-                                type="password"
-                                placeholder="••••••••"
-                                value={formData.password}
-                                onChange={handleChange}
-                                required
-                                autoComplete="off"
-                                style={inputStyle}
-                                onFocus={handleFocus}
-                                onBlur={handleBlur}
-                            />
-                        </div>
+                            {/* Email */}
+                            <div className="flex flex-col gap-1">
 
-                        {/* divider */}
-                        <div style={{ borderTop: '1px solid #1f1f1f', margin: '2px 0' }} />
+                                <label
+                                    htmlFor="email"
+                                    className="text-[9px] font-semibold font-mono tracking-[0.18em] uppercase text-[#211E1A]"
+                                >
+                                    EMAIL
+                                </label>
 
-                        {/* isSeller */}
-                        <div
-                            className="flex items-center gap-4"
-                            style={{
-                                padding: '14px 16px',
-                                borderRadius: '4px',
-                                border: `1px solid ${formData.isSeller ? '#f5c51850' : '#1f1f1f'}`,
-                                backgroundColor: formData.isSeller ? '#f5c5180a' : 'transparent',
-                                transition: 'all 0.2s',
-                                cursor: 'pointer',
-                            }}
-                        >
-                            <input
-                                id="isSeller"
-                                name="isSeller"
-                                type="checkbox"
-                                checked={formData.isSeller}
-                                onChange={handleChange}
-                                style={{
-                                    width: '16px',
-                                    height: '16px',
-                                    flexShrink: 0,
-                                    accentColor: '#f5c518',
-                                    cursor: 'pointer',
-                                }}
-                            />
+                                <input
+                                    id="email"
+                                    name="email"
+                                    type="email"
+                                    placeholder="jane@example.com"
+                                    value={formData.email}
+                                    onChange={handleChange}
+                                    required
+                                    autoComplete="off"
+                                    className="w-full h-10.5 bg-white border border-[#DDD6CA] px-3.5 text-[13px] text-[#211E1A] placeholder-[#999083] outline-none rounded-none focus:border-[#9D782F] transition-colors duration-200"
+                                />
 
-                            <div style={{ flex: 1 }}>
-                                <p style={{ fontSize: '13px', fontWeight: 500, color: '#e5e2e1', marginBottom: '2px' }}>
-                                    Register as a Seller
-                                </p>
-                                <p style={{ fontSize: '11px', color: '#6b6055', letterSpacing: '0.02em' }}>
-                                    List your clothing on the Vellique marketplace
-                                </p>
                             </div>
 
-                            {/* pill badge */}
-                            <span
-                                style={{
-                                    marginLeft: 'auto',
-                                    fontSize: '9px',
-                                    fontWeight: 600,
-                                    letterSpacing: '0.14em',
-                                    textTransform: 'uppercase',
-                                    padding: '3px 8px',
-                                    borderRadius: '999px',
-                                    border: '1px solid #2e2e2e',
-                                    color: formData.isSeller ? '#f5c518' : '#4a4a4a',
-                                    backgroundColor: formData.isSeller ? '#f5c5181a' : 'transparent',
-                                    transition: 'all 0.2s',
-                                    flexShrink: 0,
-                                }}
+
+                            {/* Password */}
+                            <div className="flex flex-col gap-1">
+
+                                <label
+                                    htmlFor="password"
+                                    className="text-[9px] font-semibold font-mono tracking-[0.18em] uppercase text-[#211E1A]"
+                                >
+                                    PASSWORD
+                                </label>
+
+                                <div className="relative flex items-center">
+
+                                    <input
+                                        id="password"
+                                        name="password"
+                                        type={showPassword ? "text" : "password"}
+                                        placeholder="••••••••"
+                                        value={formData.password}
+                                        onChange={handleChange}
+                                        required
+                                        autoComplete="off"
+                                        className="w-full h-10.5 bg-white border border-[#DDD6CA] pl-3.5 pr-11 text-[13px] text-[#211E1A] placeholder-[#999083] outline-none rounded-none focus:border-[#9D782F] transition-colors duration-200"
+                                    />
+
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowPassword(prev => !prev)}
+                                        className="absolute right-3 text-[#756E63] hover:text-[#211E1A] transition-colors p-1"
+                                        title={showPassword ? "Hide password" : "Show password"}
+                                    >
+                                        {showPassword ? (
+                                            <svg
+                                                className="w-4 h-4"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                                stroke="currentColor"
+                                            >
+                                                <path
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeWidth={1.5}
+                                                    d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858-5.908a10.03 10.03 0 013.682-.763c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21M3 3l18 18"
+                                                />
+                                            </svg>
+                                        ) : (
+                                            <svg
+                                                className="w-4 h-4"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                                stroke="currentColor"
+                                            >
+                                                <path
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeWidth={1.5}
+                                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                                                />
+                                                <path
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeWidth={1.5}
+                                                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                                                />
+                                            </svg>
+                                        )}
+                                    </button>
+
+                                </div>
+                            </div>
+
+
+                            {/* Seller Switch */}
+                            <div className="pt-1">
+
+                                <div className="flex items-center justify-between pb-3 border-b border-[#DDD6CA]">
+
+                                    <label
+                                        htmlFor="isSeller"
+                                        className="text-[9px] font-semibold font-mono tracking-[0.18em] uppercase text-[#211E1A] cursor-pointer"
+                                    >
+                                        REGISTER AS A SELLER
+                                    </label>
+
+                                    <label className="relative inline-flex items-center cursor-pointer">
+
+                                        <input
+                                            id="isSeller"
+                                            name="isSeller"
+                                            type="checkbox"
+                                            checked={formData.isSeller}
+                                            onChange={handleChange}
+                                            className="sr-only peer"
+                                        />
+
+                                        <div className="w-10 h-[22px] bg-[#E5DFD5] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-[#DDD6CA] after:border after:rounded-full after:h-[18px] after:w-[18px] after:transition-all peer-checked:bg-[#9D782F]" />
+
+                                    </label>
+
+                                </div>
+
+                            </div>
+
+
+                            {/* Create Account */}
+                            <button
+                                type="submit"
+                                className="w-full h-[44px] bg-[#222] hover:bg-[#333] text-white font-mono text-sm font-bold tracking-[0.1em] uppercase rounded-md transition-colors duration-200 cursor-pointer"
                             >
-                                isSeller
-                            </span>
-                        </div>
+                                CREATE ACCOUNT
+                            </button>
 
-                        {/* submit */}
-                        <button
-                            type="submit"
-                            style={{
-                                width: '100%',
-                                padding: '15px 24px',
-                                borderRadius: '4px',
-                                border: 'none',
-                                backgroundColor: '#f5c518',
-                                color: '#0d0d0d',
-                                fontSize: '12px',
-                                fontWeight: 700,
-                                fontFamily: 'Inter, sans-serif',
-                                letterSpacing: '0.14em',
-                                textTransform: 'uppercase',
-                                cursor: 'pointer',
-                                transition: 'background-color 0.2s, transform 0.1s',
-                            }}
-                            onMouseEnter={e => e.currentTarget.style.backgroundColor = '#ffe08b'}
-                            onMouseLeave={e => e.currentTarget.style.backgroundColor = '#f5c518'}
-                            onMouseDown={e => e.currentTarget.style.transform = 'scale(0.99)'}
-                            onMouseUp={e => e.currentTarget.style.transform = 'scale(1)'}
-                        >
-                            Create Account
-                        </button>
-                        <ContinueWithGoogle />
 
-                        {/* sign in link */}
-                        <p
-                            style={{
-                                textAlign: 'center',
-                                fontSize: '12px',
-                                color: '#6b6055',
-                                marginTop: '4px',
-                            }}
-                        >
-                            Already have an account?{' '}
-                            <a
-                                href="/login"
-                                style={{
-                                    color: '#f5c518',
-                                    fontWeight: 500,
-                                    textDecoration: 'underline',
-                                    textUnderlineOffset: '3px',
-                                    textDecorationThickness: '1px',
-                                }}
-                                onMouseEnter={e => e.currentTarget.style.color = '#ffe08b'}
-                                onMouseLeave={e => e.currentTarget.style.color = '#f5c518'}
-                            >
-                                Sign In
-                            </a>
-                        </p>
+                            {/* OR Divider */}
+                            <div className="relative flex items-center justify-center my-0.5">
 
-                    </form>
+                                <div className="border-t border-[#DDD6CA] w-full" />
+
+                                <span className="bg-[#] px-3 text-[9px] font-mono uppercase tracking-widest text-[#999083] absolute">
+                                    OR
+                                </span>
+
+                            </div>
+
+
+                            {/* Google */}
+                            <ContinueWithGoogle />
+
+
+                            {/* Sign In */}
+                            <p className="text-center text-[11px] text-[#756E63] mt-0.5 font-light">
+
+                                Already have an account?
+
+                                <a
+                                    href="/login"
+                                    className="text-[#9D782F] font-medium hover:underline transition-colors ml-1"
+                                >
+                                    Sign In
+                                </a>
+
+                            </p>
+
+                        </form>
+
+                    </div>
+
                 </div>
+
             </main>
+
         </div>
     )
+
+
 }
 
 export default Register
