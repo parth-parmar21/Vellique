@@ -3,15 +3,15 @@ import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 function CreateProduct() {
-const CURRENCIES = [
-    { code: 'USD', symbol: '$', name: 'US Dollar ($)' },
-    { code: 'EUR', symbol: '€', name: 'Euro (€)' },
-    { code: 'GBP', symbol: '£', name: 'British Pound (£)' },
-    { code: 'INR', symbol: '₹', name: 'Indian Rupee (₹)' },
-    { code: 'AED', symbol: 'AED', name: 'Dirham (AED)' },
-];
-const MAX_IMAGES = 7;
-const MAX_IMAGE_SIZE = 5 * 1024 * 1024; //5 MB
+    const CURRENCIES = [
+        { code: 'USD', symbol: '$', name: 'US Dollar ($)' },
+        { code: 'EUR', symbol: '€', name: 'Euro (€)' },
+        { code: 'GBP', symbol: '£', name: 'British Pound (£)' },
+        { code: 'INR', symbol: '₹', name: 'Indian Rupee (₹)' },
+        { code: 'AED', symbol: 'AED', name: 'Dirham (AED)' },
+    ];
+    const MAX_IMAGES = 7;
+    const MAX_IMAGE_SIZE = 5 * 1024 * 1024; //5 MB
 
     const { handleCreateProduct } = useProducts();
     const navigate = useNavigate();
@@ -264,342 +264,515 @@ const MAX_IMAGE_SIZE = 5 * 1024 * 1024; //5 MB
             setIsSubmitting(false);
         }
     };
+    
+    const inputStyle = {
+        fontFamily: "'Inter', sans-serif"
+    };
+
     return (
-        <div className="min-h-screen bg-[#0d0d0d] text-on-surface font-sans antialiased flex flex-col selection:bg-primary-container selection:text-black">
-            {/* Main Content Area */}
-            <main className="grow max-w-4xl w-full mx-auto px-4 sm:px-6 py-8 sm:py-8">
-                {/* Page Header with Quiet Luxury Typography */}
-                <div className="text-center sm:text-left border-b border-[#262626] pb-8">
-                    <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#1a1a1a] border border-[#333333] rounded-full mb-4">
-                        <span className="w-2 h-2 rounded-full bg-primary-container animate-pulse" />
-                        <span className="text-[11px] font-mono uppercase tracking-widest text-on-surface-variant">
-                            New Collection Item
+        <>
+            {/* Google Fonts */}
+            <link
+                href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap"
+                rel="stylesheet"
+            />
+            
+            <div className="min-h-screen selection:bg-[#9D782F]/30" style={{ backgroundColor: '#fbf9f6', fontFamily: "'Inter', sans-serif" }}>
+                
+                {/* ── HEADER ── */}
+                <header className="w-full px-6 py-8 sm:px-12 flex items-center justify-between">
+                    <span
+                        className="text-sm font-normal tracking-[0.3em] uppercase"
+                        style={{ fontFamily: "'Cormorant Garamond', serif", color: '#9D782F' }}
+                    >
+                        Vellique.
+                    </span>
+                    <div className="flex flex-col items-end">
+                        <span className="text-[10px] uppercase tracking-[0.2em] font-medium" style={{ color: '#211E1A' }}>
+                            Seller Studio
+                        </span>
+                        <span className="text-[9px] uppercase tracking-[0.1em]" style={{ color: '#9A9287' }}>
+                            Create Product
                         </span>
                     </div>
-                    <h1 className="text-3xl sm:text-4xl font-serif tracking-tight text-[#ffffff] font-medium">
-                        Create Product
-                    </h1>
-                    <p className="mt-2 text-sm sm:text-base text-outline max-w-xl font-light">
-                        Add a new luxury piece to your Vellique catalog. Curate titles, descriptions, pricing, and visual presentation.
-                    </p>
-                </div>
-                {/* Status Notification Banner */}
-                {statusMessage && (
-                    <div
-                        className={`mb-8 p-4 rounded-sm border text-sm flex items-start gap-3 transition-all ${statusMessage.type === 'success'
-                            ? 'bg-[#1c281e] border-[#2e5235] text-[#86efac]'
-                            : 'bg-[#2a1719] border-[#592225] text-[#fca5a5]'
-                            }`}
-                    >
-                        {statusMessage.type === 'success' ? (
-                            <svg className="w-5 h-5 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                            </svg>
-                        ) : (
-                            <svg className="w-5 h-5 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                            </svg>
-                        )}
-                        <div className="flex-1">
-                            <p className="font-medium">{statusMessage.text}</p>
-                        </div>
-                        <button
-                            type="button"
-                            onClick={() => setStatusMessage(null)}
-                            className="text-xs opacity-70 hover:opacity-100"
+                </header>
+
+                {/* ── MAIN CONTENT ── */}
+                <main className="max-w-5xl mx-auto px-5 sm:px-8 lg:px-12 pb-24">
+                    
+                    {/* Page Introduction */}
+                    <div className="mt-8 mb-12 text-center sm:text-left">
+                        <p className="text-[10px] uppercase tracking-[0.2em] mb-4 font-medium" style={{ color: '#756E63' }}>
+                            Seller Studio
+                        </p>
+                        <h1 
+                            className="text-4xl sm:text-5xl lg:text-6xl font-light mb-4 text-[#211E1A]" 
+                            style={{ fontFamily: "'Cormorant Garamond', serif" }}
                         >
-                            ✕
-                        </button>
+                            Create Something <br className="hidden sm:block" />
+                            <em style={{ color: '#9D782F' }}>Beautiful.</em>
+                        </h1>
+                        <p className="text-sm font-light max-w-md mx-auto sm:mx-0" style={{ color: '#9A9287', lineHeight: '1.6' }}>
+                            Curate a new piece for the Vellique collection. Add the details, pricing, and imagery that define its character.
+                        </p>
                     </div>
-                )}
-                {/* Product Creation Form Card */}
-                <form
-                    onSubmit={handleSubmit}
-                    className="bg-[#141414] border border-[#262626] rounded-md p-6 sm:p-10 space-y-10 shadow-2xl relative"
-                >
-                    {/* SECTION 1: Basic Information */}
-                    <div className="space-y-6">
-                        <div className="border-b border-[#262626] pb-3">
-                            <h2 className="text-xs font-mono uppercase tracking-widest text-primary-container font-semibold">
-                                01. Details
-                            </h2>
-                        </div>
-                        {/* Title Field */}
-                        <div className="space-y-2">
-                            <div className="flex justify-between items-center">
-                                <label
-                                    htmlFor="title"
-                                    className="block text-xs uppercase tracking-wider text-on-surface-variant font-medium"
-                                >
-                                    Product Title <span className="text-primary-container">*</span>
-                                </label>
-                                <span className="text-[11px] text-outline">
-                                    {title.length}/100
-                                </span>
+
+                    <div className="w-full h-px mb-12" style={{ backgroundColor: '#DDD7CC' }}></div>
+
+                    {/* Status Message */}
+                    {statusMessage && (
+                        <div
+                            className={`mb-8 p-4 border text-sm flex items-start gap-3 transition-all duration-300 ${
+                                statusMessage.type === 'success'
+                                    ? 'bg-[#f4f7f4] border-[#c3dec7] text-[#2c5234]'
+                                    : 'bg-[#fdf6f6] border-[#ecc7c7] text-[#913232]'
+                            }`}
+                        >
+                            {statusMessage.type === 'success' ? (
+                                <svg className="w-5 h-5 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 13l4 4L19 7" />
+                                </svg>
+                            ) : (
+                                <svg className="w-5 h-5 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                </svg>
+                            )}
+                            <div className="flex-1">
+                                <p className="font-medium" style={{ fontFamily: "'Inter', sans-serif" }}>{statusMessage.text}</p>
                             </div>
-                            <input
-                                id="title"
-                                type="text"
-                                maxLength={100}
-                                value={title}
-                                onChange={(e) => setTitle(e.target.value)}
-                                aria-invalid={Boolean(errors.title)}
-                                aria-describedby={errors.title ? 'title-error' : undefined}
-                                placeholder="e.g. Obsidian Cashmere Trench Coat"
-                                className={`w-full bg-[#0d0d0d] border ${errors.title ? 'border-red-500' : 'border-[#262626] focus:border-primary-container'
-                                    } rounded-sm px-4 py-3 text-sm text-[#ffffff] placeholder-[#555555] outline-none transition-colors duration-200`}
-                            />
-                            {errors.title && (
-                                <p id="title-error" className="text-xs text-red-400 mt-1">{errors.title}</p>
-                            )}
-                        </div>
-                        {/* Description Field */}
-                        <div className="space-y-2">
-                            <label
-                                htmlFor="description"
-                                className="block text-xs uppercase tracking-wider text-on-surface-variant font-medium"
+                            <button
+                                type="button"
+                                onClick={() => setStatusMessage(null)}
+                                className="text-xs opacity-60 hover:opacity-100 transition-opacity"
                             >
-                                Description <span className="text-primary-container">*</span>
-                            </label>
-                            <textarea
-                                id="description"
-                                rows={5}
-                                value={description}
-                                onChange={(e) => setDescription(e.target.value)}
-                                aria-invalid={Boolean(errors.description)}
-                                aria-describedby={errors.description ? 'description-error' : undefined}
-                                placeholder="Describe the craftsmanship, materials, origin, drape, and care instructions..."
-                                className={`w-full bg-[#0d0d0d] border ${errors.description ? 'border-red-500' : 'border-[#262626] focus:border-primary-container'
-                                    } rounded-sm p-4 text-sm text-[#ffffff] placeholder-[#555555] outline-none transition-colors duration-200 resize-y min-h-30`}
-                            />
-                            {errors.description && (
-                                <p id="description-error" className="text-xs text-red-400 mt-1">{errors.description}</p>
-                            )}
+                                ✕
+                            </button>
                         </div>
-                    </div>
-                    {/* SECTION 2: Pricing */}
-                    <div className="space-y-6">
-                        <div className="border-b border-[#262626] pb-3">
-                            <h2 className="text-xs font-mono uppercase tracking-widest text-primary-container font-semibold">
-                                02. Pricing
-                            </h2>
-                        </div>
-                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
-                            {/* Price Amount */}
-                            <div className="sm:col-span-2 space-y-2">
-                                <label
-                                    htmlFor="priceAmount"
-                                    className="block text-xs uppercase tracking-wider text-on-surface-variant font-medium"
-                                >
-                                    Price Amount <span className="text-primary-container">*</span>
-                                </label>
-                                <div className="relative">
-                                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-outline font-mono text-sm">
-                                        {CURRENCIES.find((c) => c.code === priceCurrency)?.symbol || '$'}
+                    )}
+
+                    {/* Form Container */}
+                    <form
+                        onSubmit={handleSubmit}
+                        className="bg-white border p-6 sm:p-10 lg:p-12"
+                        style={{ borderColor: '#DDD7CC' }}
+                    >
+                        
+                        {/* ── DETAILS SECTION ── */}
+                        <div className="mb-14">
+                            <div className="mb-8">
+                                <h2 className="text-2xl sm:text-3xl font-light text-[#211E1A]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+                                    Product Details
+                                </h2>
+                                <p className="text-xs mt-1" style={{ color: '#9A9287' }}>
+                                    Tell customers what makes this piece distinctive.
+                                </p>
+                            </div>
+
+                            <div className="space-y-8">
+                                {/* Title Field */}
+                                <div className="flex flex-col gap-2">
+                                    <div className="flex justify-between items-end">
+                                        <label
+                                            htmlFor="title"
+                                            className="text-[10px] uppercase tracking-[0.18em] font-medium"
+                                            style={{ color: '#756E63' }}
+                                        >
+                                            Product Title
+                                        </label>
+                                        <span className="text-[10px]" style={{ color: '#9A9287' }}>
+                                            {String(title).length > 9 ? title.length : `0${title.length}`} / 100
+                                        </span>
                                     </div>
                                     <input
-                                        id="priceAmount"
-                                        type="number"
-                                        step="0.01"
-                                        min="0.01"
-                                        inputMode="decimal"
-                                        aria-invalid={Boolean(errors.priceAmount)}
-                                        value={priceAmount}
-                                        onChange={(e) => setPriceAmount(e.target.value)}
-                                        placeholder="0.00"
-                                        className={`w-full bg-[#0d0d0d] border ${errors.priceAmount
-                                            ? 'border-red-500'
-                                            : 'border-[#262626] focus:border-primary-container'
-                                            } rounded-sm pl-10 pr-4 py-3 text-sm text-[#ffffff]
-                                                font-mono placeholder-[#555555] outline-none transition-colors duration-200
-                                                [appearance:textfield]
-                                                [&::-webkit-inner-spin-button]:appearance-none
-                                                [&::-webkit-outer-spin-button]:appearance-none`
-                                        }
+                                        id="title"
+                                        type="text"
+                                        maxLength={100}
+                                        value={title}
+                                        onChange={(e) => setTitle(e.target.value)}
+                                        aria-invalid={Boolean(errors.title)}
+                                        aria-describedby={errors.title ? 'title-error' : undefined}
+                                        placeholder="Obsidian Cashmere Trench Coat"
+                                        className="w-full bg-transparent outline-none py-3 text-sm transition-colors duration-300"
+                                        style={{
+                                            ...inputStyle,
+                                            color: '#211E1A',
+                                            borderBottom: `1px solid ${errors.title ? '#c25a5a' : '#DDD7CC'}`
+                                        }}
+                                        onFocus={e => !errors.title && (e.target.style.borderBottomColor = '#9D782F')}
+                                        onBlur={e => !errors.title && (e.target.style.borderBottomColor = '#DDD7CC')}
                                     />
+                                    {errors.title && (
+                                        <p id="title-error" className="text-[10px] text-[#c25a5a] mt-1">{errors.title}</p>
+                                    )}
                                 </div>
-                                {errors.priceAmount && (
-                                    <p className="text-xs text-red-400 mt-1">{errors.priceAmount}</p>
-                                )}
-                            </div>
-                            {/* Price Currency */}
-                            <div className="space-y-2">
-                                <label
-                                    htmlFor="priceCurrency"
-                                    className="block text-xs uppercase tracking-wider text-on-surface-variant font-medium"
-                                >
-                                    Currency <span className="text-primary-container">*</span>
-                                </label>
-                                <select
-                                    id="priceCurrency"
-                                    value={priceCurrency}
-                                    onChange={(e) => setPriceCurrency(e.target.value)}
-                                    className="w-full bg-[#0d0d0d] border border-[#262626] focus:border-primary-container rounded-sm px-4 py-3 text-sm text-[#ffffff] outline-none transition-colors duration-200 appearance-none cursor-pointer"
-                                >
-                                    {CURRENCIES.map((curr) => (
-                                        <option key={curr.code} value={curr.code} className="bg-[#141414] text-[#ffffff]">
-                                            {curr.name}
-                                        </option>
-                                    ))}
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    {/* SECTION 3: Product Images (Up to 7) */}
-                    <div className="space-y-6">
-                        <div className="border-b border-[#262626] pb-3 flex justify-between items-center">
-                            <h2 className="text-xs font-mono uppercase tracking-widest text-primary-container font-semibold">
-                                03. Product Imagery
-                            </h2>
-                            <span className="text-xs font-mono text-outline">
-                                {images.length} / {MAX_IMAGES} Uploaded
-                            </span>
-                        </div>
-                        {/* Drag and Drop Zone */}
-                        {images.length < MAX_IMAGES && (
-                            <div
-                                onDragEnter={handleDrag}
-                                onDragLeave={handleDrag}
-                                onDragOver={handleDrag}
-                                onDrop={handleDrop}
-                                onClick={() => fileInputRef.current?.click()}
-                                className={`border-2 border-dashed rounded-md p-8 sm:p-10 text-center cursor-pointer transition-all duration-200 ${dragActive
-                                    ? 'border-primary-container bg-primary-container/5 scale-[0.99]'
-                                    : errors.images
-                                        ? 'border-red-500 bg-red-950/10'
-                                        : 'border-[#333333] hover:border-primary-container bg-[#0d0d0d] hover:bg-[#1a1a1a]'
-                                    }`}
-                            >
-                                <input
-                                    ref={fileInputRef}
-                                    type="file"
-                                    multiple
-                                    accept="image/jpeg,image/png,image/webp,image/avif"
-                                    onChange={handleFileInputChange}
-                                    className="hidden"
-                                />
-                                <div className="flex flex-col items-center gap-3">
-                                    <div className="w-12 h-12 rounded-full bg-[#1e1e1e] border border-[#333333] flex items-center justify-center text-primary-container">
-                                        <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                        </svg>
-                                    </div>
-                                    <div className="space-y-1">
-                                        <p className="text-sm font-medium text-on-surface">
-                                            <span className="text-primary-container underline underline-offset-4">Click to browse</span> or drag and drop image files
-                                        </p>
-                                        <p className="text-xs text-outline font-light">
-                                            Supports PNG, JPG, WEBP up to 5MB each. First image becomes the Cover.
-                                        </p>
-                                    </div>
+
+                                {/* Description Field */}
+                                <div className="flex flex-col gap-2">
+                                    <label
+                                        htmlFor="description"
+                                        className="text-[10px] uppercase tracking-[0.18em] font-medium"
+                                        style={{ color: '#756E63' }}
+                                    >
+                                        Description
+                                    </label>
+                                    <textarea
+                                        id="description"
+                                        rows={4}
+                                        value={description}
+                                        onChange={(e) => setDescription(e.target.value)}
+                                        aria-invalid={Boolean(errors.description)}
+                                        aria-describedby={errors.description ? 'description-error' : undefined}
+                                        placeholder="Describe the craftsmanship, materials, origin, drape, and care..."
+                                        className="w-full bg-transparent outline-none py-3 text-sm transition-colors duration-300 resize-y"
+                                        style={{
+                                            ...inputStyle,
+                                            color: '#211E1A',
+                                            borderBottom: `1px solid ${errors.description ? '#c25a5a' : '#DDD7CC'}`,
+                                            lineHeight: '1.6'
+                                        }}
+                                        onFocus={e => !errors.description && (e.target.style.borderBottomColor = '#9D782F')}
+                                        onBlur={e => !errors.description && (e.target.style.borderBottomColor = '#DDD7CC')}
+                                    />
+                                    {errors.description && (
+                                        <p id="description-error" className="text-[10px] text-[#c25a5a] mt-1">{errors.description}</p>
+                                    )}
                                 </div>
                             </div>
-                        )}
-                        {errors.images && (
-                            <p className="text-xs text-red-400 mt-1">{errors.images}</p>
-                        )}
-                        {/* Images Grid */}
-                        {images.length > 0 && (
-                            <div className="space-y-3">
-                                <p className="text-xs font-mono uppercase tracking-wider text-outline">
-                                    Gallery Preview ({images.length})
+                        </div>
+
+                        {/* ── PRICING SECTION ── */}
+                        <div className="mb-16">
+                            <div className="mb-8 border-t pt-10" style={{ borderColor: '#DDD7CC' }}>
+                                <h2 className="text-2xl sm:text-3xl font-light text-[#211E1A]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+                                    Pricing
+                                </h2>
+                                <p className="text-xs mt-1" style={{ color: '#9A9287' }}>
+                                    Set the value of this piece.
                                 </p>
-                                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                            </div>
+
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+                                {/* Price Amount */}
+                                <div className="flex flex-col gap-2">
+                                    <label
+                                        htmlFor="priceAmount"
+                                        className="text-[10px] uppercase tracking-[0.18em] font-medium"
+                                        style={{ color: '#756E63' }}
+                                    >
+                                        Price
+                                    </label>
+                                    <div className="relative flex items-center">
+                                        <span className="absolute left-0 text-sm" style={{ color: '#211E1A' }}>
+                                            {CURRENCIES.find((c) => c.code === priceCurrency)?.symbol || '$'}
+                                        </span>
+                                        <input
+                                            id="priceAmount"
+                                            type="number"
+                                            step="0.01"
+                                            min="0.01"
+                                            inputMode="decimal"
+                                            aria-invalid={Boolean(errors.priceAmount)}
+                                            value={priceAmount}
+                                            onChange={(e) => setPriceAmount(e.target.value)}
+                                            placeholder="0.00"
+                                            className="w-full bg-transparent outline-none py-3 pl-6 text-sm transition-colors duration-300 [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                                            style={{
+                                                ...inputStyle,
+                                                color: '#211E1A',
+                                                borderBottom: `1px solid ${errors.priceAmount ? '#c25a5a' : '#DDD7CC'}`
+                                            }}
+                                            onFocus={e => !errors.priceAmount && (e.target.style.borderBottomColor = '#9D782F')}
+                                            onBlur={e => !errors.priceAmount && (e.target.style.borderBottomColor = '#DDD7CC')}
+                                        />
+                                    </div>
+                                    {errors.priceAmount && (
+                                        <p className="text-[10px] text-[#c25a5a] mt-1">{errors.priceAmount}</p>
+                                    )}
+                                </div>
+
+                                {/* Price Currency */}
+                                <div className="flex flex-col gap-2">
+                                    <label
+                                        htmlFor="priceCurrency"
+                                        className="text-[10px] uppercase tracking-[0.18em] font-medium"
+                                        style={{ color: '#756E63' }}
+                                    >
+                                        Currency
+                                    </label>
+                                    <div className="relative">
+                                        <select
+                                            id="priceCurrency"
+                                            value={priceCurrency}
+                                            onChange={(e) => setPriceCurrency(e.target.value)}
+                                            className="w-full bg-transparent outline-none py-3 text-sm transition-colors duration-300 appearance-none cursor-pointer"
+                                            style={{
+                                                ...inputStyle,
+                                                color: '#211E1A',
+                                                borderBottom: '1px solid #DDD7CC'
+                                            }}
+                                            onFocus={e => e.target.style.borderBottomColor = '#9D782F'}
+                                            onBlur={e => e.target.style.borderBottomColor = '#DDD7CC'}
+                                        >
+                                            {CURRENCIES.map((curr) => (
+                                                <option key={curr.code} value={curr.code}>
+                                                    {curr.code} — {curr.name}
+                                                </option>
+                                            ))}
+                                        </select>
+                                        <div className="absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none" style={{ color: '#756E63' }}>
+                                            <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 9l-7 7-7-7" />
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* ── IMAGES SECTION ── */}
+                        <div className="mb-16">
+                            <div className="mb-8 border-t pt-10 flex flex-col sm:flex-row sm:justify-between sm:items-end gap-4" style={{ borderColor: '#DDD7CC' }}>
+                                <div>
+                                    <h2 className="text-2xl sm:text-3xl font-light text-[#211E1A]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+                                        Product Imagery
+                                    </h2>
+                                    <p className="text-xs mt-1" style={{ color: '#9A9287' }}>
+                                        Provide up to 7 high-quality images.
+                                    </p>
+                                </div>
+                                <span className="text-[10px] uppercase tracking-widest" style={{ color: '#9A9287' }}>
+                                    {String(images.length).padStart(2, '0')} / {String(MAX_IMAGES).padStart(2, '0')} IMAGES
+                                </span>
+                            </div>
+
+                            {/* Uploader */}
+                            {images.length < MAX_IMAGES && (
+                                <div
+                                    onDragEnter={handleDrag}
+                                    onDragLeave={handleDrag}
+                                    onDragOver={handleDrag}
+                                    onDrop={handleDrop}
+                                    onClick={() => fileInputRef.current?.click()}
+                                    className="mb-8 w-full py-16 sm:py-20 flex flex-col items-center justify-center cursor-pointer transition-all duration-300"
+                                    style={{
+                                        border: `1px dashed ${dragActive ? '#9D782F' : errors.images ? '#c25a5a' : '#DDD7CC'}`,
+                                        backgroundColor: dragActive ? '#fcfaf6' : '#f7f4ee',
+                                    }}
+                                    onMouseEnter={e => {
+                                        if(!dragActive && !errors.images) {
+                                            e.currentTarget.style.borderColor = '#9D782F';
+                                            e.currentTarget.style.backgroundColor = '#fcfaf6';
+                                        }
+                                    }}
+                                    onMouseLeave={e => {
+                                        if(!dragActive && !errors.images) {
+                                            e.currentTarget.style.borderColor = '#DDD7CC';
+                                            e.currentTarget.style.backgroundColor = '#f7f4ee';
+                                        }
+                                    }}
+                                >
+                                    <input
+                                        ref={fileInputRef}
+                                        type="file"
+                                        multiple
+                                        accept="image/jpeg,image/png,image/webp,image/avif"
+                                        onChange={handleFileInputChange}
+                                        className="hidden"
+                                    />
+                                    <div className="flex flex-col items-center gap-4 px-4 text-center">
+                                        <svg className="w-6 h-6" style={{ color: '#9D782F' }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M12 4v16m8-8H4" />
+                                        </svg>
+                                        <div className="space-y-2">
+                                            <p className="text-[11px] uppercase tracking-[0.2em] font-medium" style={{ color: '#211E1A' }}>
+                                                ADD PRODUCT IMAGERY
+                                            </p>
+                                            <p className="text-sm" style={{ color: '#756E63' }}>
+                                                Drop your images here <br className="sm:hidden" />
+                                                <span className="hidden sm:inline"> or </span>
+                                                <span style={{ color: '#9D782F', textDecoration: 'underline', textUnderlineOffset: '2px' }}>Browse files</span>
+                                            </p>
+                                        </div>
+                                        <p className="text-[10px]" style={{ color: '#9A9287' }}>
+                                            PNG, JPG, WEBP or AVIF · Up to 5MB each · Maximum {MAX_IMAGES} images
+                                        </p>
+                                    </div>
+                                </div>
+                            )}
+
+                            {errors.images && (
+                                <p className="text-[10px] text-[#c25a5a] mb-8">{errors.images}</p>
+                            )}
+
+                            {/* Gallery */}
+                            {images.length > 0 && (
+                                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
                                     {images.map((img, idx) => (
                                         <div
                                             key={img.id}
-                                            className={`group relative aspect-square rounded-sm overflow-hidden border bg-[#0d0d0d] transition-all ${img.isCover
-                                                ? 'border-primary-container ring-1 ring-primary-container/30'
-                                                : 'border-[#262626] hover:border-[#555555]'
-                                                }`}
+                                            className="group relative aspect-square bg-[#fbf9f6] transition-all duration-300"
+                                            style={{
+                                                border: `1px solid ${img.isCover ? '#9D782F' : '#DDD7CC'}`
+                                            }}
                                         >
                                             <img
                                                 src={img.previewUrl}
-                                                alt={`Product preview ${idx + 1}`}
-                                                className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-300"
+                                                alt={`Preview ${idx + 1}`}
+                                                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
                                             />
-                                            {/* Cover Badge */}
+                                            
+                                            {/* Hover overlay */}
+                                            <div className="absolute inset-0 bg-[#211E1A]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+
                                             {img.isCover ? (
-                                                <div className="absolute top-2 left-2 bg-primary-container text-[#0d0d0d] font-mono text-[10px] uppercase font-bold tracking-widest px-2 py-0.5 rounded-sm shadow-md">
-                                                    Cover
+                                                <div 
+                                                    className="absolute top-3 left-3 text-[9px] uppercase tracking-[0.2em] px-2 py-1"
+                                                    style={{ backgroundColor: '#9D782F', color: '#211E1A', fontWeight: '500' }}
+                                                >
+                                                    COVER
                                                 </div>
                                             ) : (
                                                 <button
                                                     type="button"
                                                     onClick={() => setCoverImage(img.id)}
-                                                    className="absolute top-2 left-2 opacity-0 group-hover:opacity-100 bg-on-surface/80 hover:bg-primary-container text-white hover:text-[#0d0d0d] text-[10px] uppercase font-mono tracking-wider px-2 py-0.5 rounded-sm transition-all border border-[#333333]"
+                                                    className="absolute top-3 left-3 opacity-0 group-hover:opacity-100 text-[9px] uppercase tracking-[0.2em] px-2 py-1 transition-all duration-300"
+                                                    style={{ backgroundColor: '#ffffff', color: '#211E1A', border: '1px solid #DDD7CC' }}
+                                                    onMouseEnter={e => {
+                                                        e.currentTarget.style.backgroundColor = '#211E1A';
+                                                        e.currentTarget.style.color = '#ffffff';
+                                                        e.currentTarget.style.borderColor = '#211E1A';
+                                                    }}
+                                                    onMouseLeave={e => {
+                                                        e.currentTarget.style.backgroundColor = '#ffffff';
+                                                        e.currentTarget.style.color = '#211E1A';
+                                                        e.currentTarget.style.borderColor = '#DDD7CC';
+                                                    }}
                                                 >
-                                                    Make Cover
+                                                    MAKE COVER
                                                 </button>
                                             )}
-                                            {/* Action overlay */}
+
                                             <button
                                                 type="button"
                                                 onClick={() => removeImage(img.id)}
-                                                className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 bg-red-950/80 hover:bg-red-600 text-white w-7 h-7 rounded-full flex items-center justify-center transition-all border border-red-500/50"
-                                                title="Remove image"
+                                                className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 w-6 h-6 flex items-center justify-center transition-all duration-300"
+                                                style={{ backgroundColor: '#ffffff', color: '#211E1A', border: '1px solid #DDD7CC' }}
+                                                onMouseEnter={e => {
+                                                    e.currentTarget.style.backgroundColor = '#c25a5a';
+                                                    e.currentTarget.style.color = '#ffffff';
+                                                    e.currentTarget.style.borderColor = '#c25a5a';
+                                                }}
+                                                onMouseLeave={e => {
+                                                    e.currentTarget.style.backgroundColor = '#ffffff';
+                                                    e.currentTarget.style.color = '#211E1A';
+                                                    e.currentTarget.style.borderColor = '#DDD7CC';
+                                                }}
                                             >
-                                                ✕
+                                                <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                                </svg>
                                             </button>
-                                            <div className="absolute bottom-2 right-2 bg-on-surface/80 text-on-surface font-mono text-[10px] px-1.5 py-0.5 rounded-sm border border-[#333333]">
-                                                #{idx + 1}
-                                            </div>
                                         </div>
                                     ))}
-                                    {/* Empty Slot Placeholders */}
+
+                                    {/* Empty Slots */}
                                     {Array.from({ length: MAX_IMAGES - images.length }).map((_, index) => (
                                         <div
                                             key={`empty-${index}`}
                                             onClick={() => fileInputRef.current?.click()}
-                                            className="aspect-square rounded-sm border border-dashed border-[#262626] bg-[#0d0d0d]/40 flex flex-col items-center justify-center text-[#444444] hover:text-[#777777] hover:border-[#333333] cursor-pointer transition-colors"
+                                            className="aspect-square flex flex-col items-center justify-center cursor-pointer transition-all duration-300"
+                                            style={{ backgroundColor: '#fbf9f6', border: '1px dashed #DDD7CC', color: '#9A9287' }}
+                                            onMouseEnter={e => {
+                                                e.currentTarget.style.borderColor = '#9D782F';
+                                                e.currentTarget.style.color = '#9D782F';
+                                            }}
+                                            onMouseLeave={e => {
+                                                e.currentTarget.style.borderColor = '#DDD7CC';
+                                                e.currentTarget.style.color = '#9A9287';
+                                            }}
                                         >
-                                            <svg className="w-6 h-6 mb-1 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 4v16m8-8H4" />
-                                            </svg>
-                                            <span className="text-[10px] font-mono uppercase tracking-wider">
-                                                Slot {images.length + index + 1}
-                                            </span>
+                                            <span className="text-xl font-light mb-1">+</span>
+                                            <span className="text-[9px] uppercase tracking-[0.2em]">ADD IMAGE</span>
                                         </div>
                                     ))}
                                 </div>
-                            </div>
-                        )}
-                    </div>
-                    {/* Form Actions Footer */}
-                    <div className="pt-6 border-t border-[#262626] flex flex-col sm:flex-row items-center justify-end gap-4">
-                        <button
-                            type="button"
-                            disabled={isSubmitting}
-                            onClick={() => {
-                                if (window.confirm('Discard changes and return?')) {
-                                    navigate(-1);
-                                }
-                            }}
-                            className="w-full sm:w-auto px-6 py-3 border border-[#333333] hover:border-[#666666] text-on-surface hover:text-primary-container text-xs font-mono uppercase tracking-widest rounded-sm transition-colors disabled:opacity-50"
-                        >
-                            Cancel
-                        </button>
-                        <button
-                            type="submit"
-                            disabled={isSubmitting}
-                            className="w-full sm:w-auto px-8 py-3 bg-primary-container hover:bg-on-surface/30 text-[#0d0d0d] text-xs font-mono uppercase font-bold tracking-widest rounded-sm shadow-lg hover:shadow-primary-container/30 transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-50 cursor-pointer"
-                        >
-                            {isSubmitting ? (
-                                <>
-                                    <svg className="animate-spin w-4 h-4 text-[#0d0d0d]" fill="none" viewBox="0 0 24 24">
-                                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                                    </svg>
-                                    <span>Publishing...</span>
-                                </>
-                            ) : (
-                                <span>Publish Product</span>
                             )}
-                        </button>
-                    </div>
-                </form>
-            </main>
-        </div>
+                        </div>
+
+                        {/* ── FORM ACTIONS ── */}
+                        <div className="pt-10 border-t flex flex-col-reverse sm:flex-row items-center justify-end gap-4" style={{ borderColor: '#DDD7CC' }}>
+                            <button
+                                type="button"
+                                disabled={isSubmitting}
+                                onClick={() => {
+                                    if (window.confirm('Discard changes and return?')) {
+                                        navigate(-1);
+                                    }
+                                }}
+                                className="w-full sm:w-auto py-4 px-8 text-[11px] uppercase tracking-[0.25em] font-medium transition-all duration-300"
+                                style={{
+                                    backgroundColor: 'transparent',
+                                    color: '#756E63',
+                                    border: '1px solid #DDD7CC'
+                                }}
+                                onMouseEnter={e => {
+                                    if(!isSubmitting) {
+                                        e.currentTarget.style.borderColor = '#9D782F';
+                                        e.currentTarget.style.color = '#9D782F';
+                                    }
+                                }}
+                                onMouseLeave={e => {
+                                    if(!isSubmitting) {
+                                        e.currentTarget.style.borderColor = '#DDD7CC';
+                                        e.currentTarget.style.color = '#756E63';
+                                    }
+                                }}
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                type="submit"
+                                disabled={isSubmitting}
+                                className="w-full sm:w-auto py-4 px-10 text-[11px] uppercase tracking-[0.25em] font-medium transition-all duration-300 flex items-center justify-center gap-3 disabled:opacity-70"
+                                style={{
+                                    backgroundColor: '#211E1A',
+                                    color: '#FFFFFF',
+                                    border: '1px solid #211E1A'
+                                }}
+                                onMouseEnter={e => {
+                                    if(!isSubmitting) {
+                                        e.currentTarget.style.backgroundColor = '#9D782F';
+                                        e.currentTarget.style.borderColor = '#9D782F';
+                                        e.currentTarget.style.color = '#211E1A';
+                                    }
+                                }}
+                                onMouseLeave={e => {
+                                    if(!isSubmitting) {
+                                        e.currentTarget.style.backgroundColor = '#211E1A';
+                                        e.currentTarget.style.borderColor = '#211E1A';
+                                        e.currentTarget.style.color = '#FFFFFF';
+                                    }
+                                }}
+                            >
+                                {isSubmitting ? (
+                                    <>
+                                        <svg className="animate-spin w-3 h-3 text-current" fill="none" viewBox="0 0 24 24">
+                                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                                        </svg>
+                                        <span>PUBLISHING...</span>
+                                    </>
+                                ) : (
+                                    <span>PUBLISH PRODUCT</span>
+                                )}
+                            </button>
+                        </div>
+
+                    </form>
+                </main>
+            </div>
+        </>
     );
-};
+}
+
 export default CreateProduct;

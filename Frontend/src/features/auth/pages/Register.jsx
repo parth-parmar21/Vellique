@@ -1,143 +1,213 @@
-import React, { useState } from 'react'
-import { useAuth } from '../hook/useAuth'
-import { useNavigate } from 'react-router-dom'
-import ContinueWithGoogle from '../components/ContinueWithGoogle'
+import React, { useState } from 'react';
+import { useAuth } from "../hook/useAuth";
+import { useNavigate } from 'react-router';
+import ContinueWithGoogle from '../components/ContinueWithGoogle';
 
 const Register = () => {
-    const { handleRegister } = useAuth()
+    const { handleRegister } = useAuth();
+    const navigate = useNavigate();
+
     const [formData, setFormData] = useState({
         fullName: '',
+        contactNumber: '',
         email: '',
-        contactNo: '',
         password: '',
-        isSeller: false,
-    })
+        isSeller: false
+    });
 
-    const [showPassword, setShowPassword] = useState(false)
-
-    const navigate = useNavigate()
-
-    const handleChange = e => {
-        const { name, value, type, checked } = e.target
-        setFormData(prev => ({ ...prev, [name]: type === 'checkbox' ? checked : value }))
-    }
+    const handleChange = (e) => {
+        const { name, value, type, checked } = e.target;
+        setFormData(prev => ({
+            ...prev,
+            [name]: type === 'checkbox' ? checked : value
+        }));
+    };
 
     const handleSubmit = async (e) => {
-        e.preventDefault()
+        e.preventDefault();
+
         await handleRegister({
             email: formData.email,
-            contact: formData.contactNo,
+            contact: formData.contactNumber,
             password: formData.password,
-            fullName: formData.fullName,
             isSeller: formData.isSeller,
-        })
+            fullname: formData.fullName
+        });
 
-        navigate('/login')
-    }
+        navigate("/");
+    };
+
+    const inputStyle = {
+        color: '#211E1A',
+        borderBottom: '1px solid #DDD7CC',
+        fontFamily: "'Inter', sans-serif"
+    };
+
+    const handleFocus = (e) => {
+        e.target.style.borderBottomColor = '#9D782F';
+    };
+
+    const handleBlur = (e) => {
+        e.target.style.borderBottomColor = '#DDD7CC';
+    };
 
     return (
-        <div className="h-screen w-full flex flex-col lg:flex-row overflow-hidden bg-[#F8F5F0] text-[#211E1A] font-sans antialiased selection:bg-[#9D782F] selection:text-white">
+        <>
+            {/* Google Fonts */}
+            <link
+                href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap"
+                rel="stylesheet"
+            />
 
-            {/* ════════════════════════════════════════
-            LEFT PANEL — Editorial Fashion Visual
-        ════════════════════════════════════════ */}
-            <aside className="hidden lg:flex lg:w-1/2 xl:w-[48%] relative flex-col justify-between overflow-hidden bg-[#1c1a17]">
+            <div
+                className="h-screen w-full flex flex-col lg:flex-row overflow-hidden selection:bg-[#9D782F]/30"
+                style={{
+                    backgroundColor: '#C9A96E',
+                    fontFamily: "'Inter', sans-serif"
+                }}
+            >
 
-                <img
-                    src="https://i.pinimg.com/736x/05/1b/f7/051bf793b1c5bbc349bd916f5998fa36.jpg"
-                    alt="Vellique editorial coat fashion"
-                    className="absolute inset-0 w-full h-full object-cover object-top opacity-90"
-                />
+                {/* ─────────────────────────────────
+                    LEFT — EDITORIAL IMAGE
+                ───────────────────────────────── */}
+                <div
+                    className="hidden lg:flex lg:w-1/2 h-screen relative overflow-hidden"
+                    style={{ backgroundColor: '#211E1A' }}
+                >
 
-                {/* Editorial overlays */}
-                <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/60 pointer-events-none" />
-                <div className="absolute inset-0 bg-gradient-to-r from-black/30 via-transparent to-transparent pointer-events-none" />
+                    <img
+                        src="https://i.pinimg.com/736x/05/1b/f7/051bf793b1c5bbc349bd916f5998fa36.jpg"
+                        alt="Vellique Fashion Editorial"
+                        className="absolute inset-0 w-full h-full object-cover object-top"
+                    />
 
-                {/* Brand */}
-                <div className="relative z-10 px-8 py-7 xl:px-10 xl:py-8">
-                    <span className="font-serif text-white text-lg tracking-[0.25em] uppercase font-normal">
-                        VELLIQUE
-                    </span>
-                </div>
+                    {/* Subtle overlay */}
+                    <div
+                        className="absolute inset-0"
+                        style={{
+                            background:
+                                'linear-gradient(to top, rgba(33,30,26,0.65) 0%, rgba(33,30,26,0.08) 55%, transparent 100%)'
+                        }}
+                    />
 
-                {/* Editorial Text */}
-                <div className="relative z-10 px-8 py-8 xl:px-10 xl:py-9">
-                    <h2 className="font-serif text-white text-3xl xl:text-[40px] font-normal leading-[1.1] tracking-tight mb-3">
-                        Dress the story
-                        <br />
-                        you want to tell.
-                    </h2>
+                    <div className="absolute inset-0 px-10 xl:px-14 py-8 flex flex-col justify-between z-10">
 
-                    <p className="text-white/80 font-sans text-xs xl:text-sm font-light leading-relaxed max-w-sm tracking-wide">
-                        Premium fashion, thoughtfully curated for the modern wardrobe.
-                    </p>
-                </div>
-            </aside>
-
-
-            {/* ════════════════════════════════════════
-            RIGHT PANEL — Registration
-        ════════════════════════════════════════ */}
-            <main className="flex-1 h-screen flex items-center justify-center overflow-y-auto bg-[#F8F5F0] px-5 py-6 sm:px-8 lg:px-10 xl:px-14">
-
-                {/* Mobile Brand */}
-                <div className="w-full max-w-102.5">
-
-                    <div className="lg:hidden text-center mb-5">
-                        <span className="font-serif text-[#9D782F] text-lg tracking-[0.25em] uppercase font-medium">
-                            VELLIQUE
+                        {/* Brand */}
+                        <span
+                            className="text-sm font-normal tracking-[0.3em] uppercase"
+                            style={{
+                                fontFamily: "'Cormorant Garamond', serif",
+                                color: '#FFFFFF'
+                            }}
+                        >
+                            Vellique.
                         </span>
-                    </div>
 
-                    {/* Form Container */}
-                    <div className="w-full">
+                        {/* Editorial Copy */}
+                        <div className="max-w-md">
 
-                        {/* Header */}
-                        <header className="text-center mb-5">
-
-                            <span className="text-[9px] sm:text-[10px] font-mono uppercase tracking-[0.25em] text-[#9D782F] font-semibold block mb-1.5">
-                                WELCOME TO VELLIQUE
-                            </span>
-
-                            <h1 className="sm:text-4xl font-serif text-[#211E1A] font-normal tracking-tight mb-1.5">
-                                Create your account
-                            </h1>
-
-                            <p className="text-[11px] sm:text-xs text-[#756E63] font-light leading-relaxed">
-                                Join Vellique and discover a more considered wardrobe.
+                            <p
+                                className="text-4xl xl:text-5xl font-light leading-[1.05] text-white mb-3"
+                                style={{
+                                    fontFamily: "'Cormorant Garamond', serif"
+                                }}
+                            >
+                                Define your
+                                <br />
+                                <em>aesthetic.</em>
                             </p>
 
-                        </header>
+                            <p
+                                className="text-xs xl:text-sm font-light leading-relaxed max-w-xs"
+                                style={{
+                                    color: 'rgba(255,255,255,0.68)'
+                                }}
+                            >
+                                Join the exclusive movement of creators and brands
+                                redefining the modern fashion landscape.
+                            </p>
+
+                        </div>
+                    </div>
+                </div>
 
 
-                        {/* ═══════════════════════
-                        REGISTRATION FORM
-                    ═══════════════════════ */}
+                {/* ─────────────────────────────────
+                    RIGHT — REGISTER FORM
+                ───────────────────────────────── */}
+                <div
+                    className="w-full lg:w-1/2 h-screen flex items-center justify-center px-6 sm:px-10 lg:px-14 xl:px-20 py-5 overflow-y-auto"
+                    style={{ backgroundColor: '#fbf9f6' }}
+                >
+
+                    <div className="w-full max-w-sm">
+
+                        {/* Mobile Brand */}
+                        <div className="lg:hidden mb-6">
+                            <span
+                                className="text-sm tracking-[0.3em] uppercase"
+                                style={{
+                                    fontFamily: "'Cormorant Garamond', serif",
+                                    color: '#9D782F'
+                                }}
+                            >
+                                Vellique.
+                            </span>
+                        </div>
+
+
+                        {/* Header */}
+                        <div className="mb-6">
+
+                            <p
+                                className="text-[9px] uppercase tracking-[0.2em] mb-2 font-medium"
+                                style={{ color: '#9D782F' }}
+                            >
+                                Welcome to Vellique
+                            </p>
+
+                            <h1
+                                className="text-[2.25rem] xl:text-[2.6rem] font-light leading-[1.05]"
+                                style={{
+                                    fontFamily: "'Cormorant Garamond', serif",
+                                    color: '#211E1A'
+                                }}
+                            >
+                                Elevate Your Style
+                            </h1>
+
+                        </div>
+
+
+                        {/* Form */}
                         <form
                             onSubmit={handleSubmit}
-                            className="flex flex-col gap-3.5"
+                            className="flex flex-col gap-4"
                         >
 
                             {/* Full Name */}
                             <div className="flex flex-col gap-1">
 
                                 <label
-                                    htmlFor="fullName"
-                                    className="text-[10px] font-semibold font-mono tracking-[0.18em] uppercase text-[#211E1A]"
+                                    htmlFor="reg-fullName"
+                                    className="text-[9px] uppercase tracking-[0.16em] font-medium"
+                                    style={{ color: '#756E63' }}
                                 >
-                                    FULL NAME
+                                    Full Name
                                 </label>
 
                                 <input
-                                    id="fullName"
-                                    name="fullName"
+                                    id="reg-fullName"
                                     type="text"
-                                    placeholder="Jane Doe"
+                                    name="fullName"
                                     value={formData.fullName}
                                     onChange={handleChange}
                                     required
-                                    autoComplete="off"
-                                    className="w-full h-10.5 bg-white border border-[#DDD6CA] px-3.5 text-[13px] text-[#211E1A] placeholder-[#999083] outline-none rounded-none focus:border-[#9D782F] transition-colors duration-200"
+                                    placeholder="e.g. John Doe"
+                                    className="w-full bg-transparent outline-none py-2 text-[13px] transition-colors duration-300"
+                                    style={inputStyle}
+                                    onFocus={handleFocus}
+                                    onBlur={handleBlur}
                                 />
 
                             </div>
@@ -147,21 +217,25 @@ const Register = () => {
                             <div className="flex flex-col gap-1">
 
                                 <label
-                                    htmlFor="contactNo"
-                                    className="text-[9px] font-semibold font-mono tracking-[0.18em] uppercase text-[#211E1A]"
+                                    htmlFor="reg-contact"
+                                    className="text-[9px] uppercase tracking-[0.16em] font-medium"
+                                    style={{ color: '#756E63' }}
                                 >
-                                    CONTACT NUMBER
+                                    Contact Number
                                 </label>
 
                                 <input
-                                    id="contactNo"
-                                    name="contactNo"
+                                    id="reg-contact"
                                     type="tel"
-                                    placeholder="+1 (555) 000-0000"
-                                    value={formData.contactNo}
+                                    name="contactNumber"
+                                    value={formData.contactNumber}
                                     onChange={handleChange}
-                                    autoComplete="off"
-                                    className="w-full h-10.5 bg-white border border-[#DDD6CA] px-3.5 text-[13px] text-[#211E1A] placeholder-[#999083] outline-none rounded-none focus:border-[#9D782F] transition-colors duration-200"
+                                    required
+                                    placeholder="+91 98765 43210"
+                                    className="w-full bg-transparent outline-none py-2 text-[13px] transition-colors duration-300"
+                                    style={inputStyle}
+                                    onFocus={handleFocus}
+                                    onBlur={handleBlur}
                                 />
 
                             </div>
@@ -171,22 +245,25 @@ const Register = () => {
                             <div className="flex flex-col gap-1">
 
                                 <label
-                                    htmlFor="email"
-                                    className="text-[9px] font-semibold font-mono tracking-[0.18em] uppercase text-[#211E1A]"
+                                    htmlFor="reg-email"
+                                    className="text-[9px] uppercase tracking-[0.16em] font-medium"
+                                    style={{ color: '#756E63' }}
                                 >
-                                    EMAIL
+                                    Email Address
                                 </label>
 
                                 <input
-                                    id="email"
-                                    name="email"
+                                    id="reg-email"
                                     type="email"
-                                    placeholder="jane@example.com"
+                                    name="email"
                                     value={formData.email}
                                     onChange={handleChange}
                                     required
-                                    autoComplete="off"
-                                    className="w-full h-10.5 bg-white border border-[#DDD6CA] px-3.5 text-[13px] text-[#211E1A] placeholder-[#999083] outline-none rounded-none focus:border-[#9D782F] transition-colors duration-200"
+                                    placeholder="hello@example.com"
+                                    className="w-full bg-transparent outline-none py-2 text-[13px] transition-colors duration-300"
+                                    style={inputStyle}
+                                    onFocus={handleFocus}
+                                    onBlur={handleBlur}
                                 />
 
                             </div>
@@ -196,122 +273,130 @@ const Register = () => {
                             <div className="flex flex-col gap-1">
 
                                 <label
-                                    htmlFor="password"
-                                    className="text-[9px] font-semibold font-mono tracking-[0.18em] uppercase text-[#211E1A]"
+                                    htmlFor="reg-password"
+                                    className="text-[9px] uppercase tracking-[0.16em] font-medium"
+                                    style={{ color: '#756E63' }}
                                 >
-                                    PASSWORD
+                                    Password
                                 </label>
 
-                                <div className="relative flex items-center">
+                                <input
+                                    id="reg-password"
+                                    type="password"
+                                    name="password"
+                                    value={formData.password}
+                                    onChange={handleChange}
+                                    required
+                                    placeholder="••••••••"
+                                    className="w-full bg-transparent outline-none py-2 text-[13px] transition-colors duration-300"
+                                    style={inputStyle}
+                                    onFocus={handleFocus}
+                                    onBlur={handleBlur}
+                                />
+
+                            </div>
+
+
+                            {/* Seller Checkbox */}
+                            <label
+                                htmlFor="reg-isSeller"
+                                className="flex items-center gap-3 cursor-pointer group mt-1"
+                            >
+
+                                <div className="relative flex-shrink-0">
 
                                     <input
-                                        id="password"
-                                        name="password"
-                                        type={showPassword ? "text" : "password"}
-                                        placeholder="••••••••"
-                                        value={formData.password}
+                                        id="reg-isSeller"
+                                        type="checkbox"
+                                        name="isSeller"
+                                        checked={formData.isSeller}
                                         onChange={handleChange}
-                                        required
-                                        autoComplete="off"
-                                        className="w-full h-10.5 bg-white border border-[#DDD6CA] pl-3.5 pr-11 text-[13px] text-[#211E1A] placeholder-[#999083] outline-none rounded-none focus:border-[#9D782F] transition-colors duration-200"
+                                        className="peer sr-only"
                                     />
 
-                                    <button
-                                        type="button"
-                                        onClick={() => setShowPassword(prev => !prev)}
-                                        className="absolute right-3 text-[#756E63] hover:text-[#211E1A] transition-colors p-1"
-                                        title={showPassword ? "Hide password" : "Show password"}
+                                    <div
+                                        className="w-4 h-4 border transition-all duration-200 flex items-center justify-center"
+                                        style={{
+                                            borderColor: formData.isSeller
+                                                ? '#9D782F'
+                                                : '#DDD7CC',
+                                            backgroundColor: formData.isSeller
+                                                ? '#9D782F'
+                                                : 'transparent'
+                                        }}
                                     >
-                                        {showPassword ? (
+                                        {formData.isSeller && (
                                             <svg
-                                                className="w-4 h-4"
+                                                className="w-2.5 h-2.5"
+                                                viewBox="0 0 12 12"
                                                 fill="none"
-                                                viewBox="0 0 24 24"
-                                                stroke="currentColor"
                                             >
                                                 <path
+                                                    d="M2 6l3 3 5-5"
+                                                    stroke="#F7F4EE"
+                                                    strokeWidth="1.5"
                                                     strokeLinecap="round"
                                                     strokeLinejoin="round"
-                                                    strokeWidth={1.5}
-                                                    d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858-5.908a10.03 10.03 0 013.682-.763c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21M3 3l18 18"
-                                                />
-                                            </svg>
-                                        ) : (
-                                            <svg
-                                                className="w-4 h-4"
-                                                fill="none"
-                                                viewBox="0 0 24 24"
-                                                stroke="currentColor"
-                                            >
-                                                <path
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    strokeWidth={1.5}
-                                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                                                />
-                                                <path
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    strokeWidth={1.5}
-                                                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
                                                 />
                                             </svg>
                                         )}
-                                    </button>
-
-                                </div>
-                            </div>
-
-
-                            {/* Seller Switch */}
-                            <div className="pt-1">
-
-                                <div className="flex items-center justify-between pb-3 border-b border-[#DDD6CA]">
-
-                                    <label
-                                        htmlFor="isSeller"
-                                        className="text-[9px] font-semibold font-mono tracking-[0.18em] uppercase text-[#211E1A] cursor-pointer"
-                                    >
-                                        REGISTER AS A SELLER
-                                    </label>
-
-                                    <label className="relative inline-flex items-center cursor-pointer">
-
-                                        <input
-                                            id="isSeller"
-                                            name="isSeller"
-                                            type="checkbox"
-                                            checked={formData.isSeller}
-                                            onChange={handleChange}
-                                            className="sr-only peer"
-                                        />
-
-                                        <div className="w-10 h-[22px] bg-[#E5DFD5] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-[#DDD6CA] after:border after:rounded-full after:h-[18px] after:w-[18px] after:transition-all peer-checked:bg-[#9D782F]" />
-
-                                    </label>
+                                    </div>
 
                                 </div>
 
-                            </div>
+                                <span
+                                    className="text-[10px] uppercase tracking-[0.14em] transition-colors duration-200"
+                                    style={{
+                                        color: formData.isSeller
+                                            ? '#9D782F'
+                                            : '#756E63'
+                                    }}
+                                >
+                                    Register as Seller
+                                </span>
+
+                            </label>
 
 
-                            {/* Create Account */}
+                            {/* Sign Up */}
                             <button
                                 type="submit"
-                                className="w-full h-[44px] bg-[#222] hover:bg-[#333] text-white font-mono text-sm font-bold tracking-[0.1em] uppercase rounded-md transition-colors duration-200 cursor-pointer"
+                                className="w-full py-3.5 text-[10px] uppercase tracking-[0.22em] font-medium transition-all duration-300 mt-1"
+                                style={{
+                                    backgroundColor: '#211E1A',
+                                    color: '#FFFFFF',
+                                    fontFamily: "'Inter', sans-serif"
+                                }}
+                                onMouseEnter={e => {
+                                    e.currentTarget.style.backgroundColor = '#302C27';
+                                }}
+                                onMouseLeave={e => {
+                                    e.currentTarget.style.backgroundColor = '#211E1A';
+                                }}
                             >
-                                CREATE ACCOUNT
+                                Sign Up
                             </button>
 
 
-                            {/* OR Divider */}
-                            <div className="relative flex items-center justify-center my-0.5">
+                            {/* Divider */}
+                            <div className="flex items-center gap-3 my-0.5">
 
-                                <div className="border-t border-[#DDD6CA] w-full" />
+                                <div
+                                    className="flex-1 h-px"
+                                    style={{ backgroundColor: '#DDD7CC' }}
+                                />
 
-                                <span className="bg-[#] px-3 text-[9px] font-mono uppercase tracking-widest text-[#999083] absolute">
-                                    OR
+                                <span
+                                    className="text-[9px] uppercase tracking-[0.15em]"
+                                    style={{ color: '#9A9287' }}
+                                >
+                                    or
                                 </span>
+
+                                <div
+                                    className="flex-1 h-px"
+                                    style={{ backgroundColor: '#DDD7CC' }}
+                                />
 
                             </div>
 
@@ -320,16 +405,29 @@ const Register = () => {
                             <ContinueWithGoogle />
 
 
-                            {/* Sign In */}
-                            <p className="text-center text-[11px] text-[#756E63] mt-0.5 font-light">
-
-                                Already have an account?
+                            {/* Footer */}
+                            <p
+                                className="text-center text-[10px] mt-0.5"
+                                style={{ color: '#9A9287' }}
+                            >
+                                Already have an account?{' '}
 
                                 <a
                                     href="/login"
-                                    className="text-[#9D782F] font-medium hover:underline transition-colors ml-1"
+                                    className="transition-colors duration-200"
+                                    style={{
+                                        color: '#756E63',
+                                        textDecoration: 'underline',
+                                        textUnderlineOffset: '3px'
+                                    }}
+                                    onMouseEnter={e => {
+                                        e.target.style.color = '#9D782F';
+                                    }}
+                                    onMouseLeave={e => {
+                                        e.target.style.color = '#756E63';
+                                    }}
                                 >
-                                    Sign In
+                                    Sign in
                                 </a>
 
                             </p>
@@ -337,15 +435,11 @@ const Register = () => {
                         </form>
 
                     </div>
-
                 </div>
+            </div>
+        </>
+    );
+};
 
-            </main>
+export default Register;
 
-        </div>
-    )
-
-
-}
-
-export default Register

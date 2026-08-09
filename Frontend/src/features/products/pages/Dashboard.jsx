@@ -3,18 +3,12 @@ import { useProducts } from '../hook/useProduct'
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import {
-    Plus,
     Search,
     LayoutGrid,
     List,
-    Eye,
-    Copy,
-    Check,
-    Package,
     X,
-    Calendar,
-    ArrowUpDown,
-    ShoppingBag
+    Check,
+    Package
 } from 'lucide-react'
 
 const CURRENCY_SYMBOLS = {
@@ -40,7 +34,7 @@ const formatDate = (isoString) => {
             year: 'numeric',
             month: 'short',
             day: 'numeric'
-        })
+        }).toUpperCase()
     } catch {
         return isoString
     }
@@ -81,7 +75,6 @@ const Dashboard = () => {
         setTimeout(() => setCopiedId(null), 2000)
     }
 
-    // Filter & Sort Logic
     const filteredProducts = sellerProducts.filter(product => {
         const query = searchTerm.toLowerCase().trim()
         if (!query) return true
@@ -108,327 +101,435 @@ const Dashboard = () => {
         return 0
     })
 
-    // Metrics
     const totalProducts = sellerProducts.length
     const totalImages = sellerProducts.reduce((acc, curr) => acc + (curr.images?.length || 0), 0)
     const totalValuation = sellerProducts.reduce((acc, curr) => acc + (curr.price?.amount || 0), 0)
 
     return (
-        <div className="min-h-screen bg-[#F8F5F0] text-[#211E1A] font-sans antialiased selection:bg-[#9D782F] selection:text-white flex flex-col">
-            <main className="grow max-w-6xl w-full mx-auto px-6 sm:px-10 py-10 sm:py-14">
-                
-                {/* ════════════════════════════════════════
-                    HEADER SECTION — Minimal Editorial Style
-                ════════════════════════════════════════ */}
-                <div className="flex flex-col md:flex-row md:items-end justify-between border-b border-[#EBE5DA] pb-8 gap-6">
-                    <div>
-                        <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-[#9D782F] font-semibold block mb-2">
-                            SELLER DASHBOARD
+        <>
+            <link
+                href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap"
+                rel="stylesheet"
+            />
+
+            <div className="min-h-screen selection:bg-[#9D782F]/30" style={{ backgroundColor: '#fbf9f6', fontFamily: "'Inter', sans-serif" }}>
+
+                <header className="w-full px-6 py-8 sm:px-12 flex items-center justify-between border-b border-[#DDD7CC]">
+                    <span
+                        className="text-sm font-normal tracking-[0.3em] uppercase"
+                        style={{ fontFamily: "'Cormorant Garamond', serif", color: '#9D782F' }}
+                    >
+                        Vellique.
+                    </span>
+                    <div className="flex items-center gap-6">
+                        <span className="text-[10px] uppercase tracking-[0.2em] font-medium" style={{ color: '#211E1A' }}>
+                            Seller Studio
                         </span>
-                        <h1 className="text-3xl sm:text-4xl font-serif text-[#211E1A] font-normal tracking-tight">
-                            Your Product Collection
-                        </h1>
-                        <p className="mt-2 text-xs sm:text-sm text-[#756E63] font-light max-w-md leading-relaxed">
-                            Overview of your luxury products, inventory details, and catalog metrics.
-                        </p>
                     </div>
+                </header>
 
-                    <div>
-                        <Link
-                            to="/seller/create-product"
-                            className="inline-flex items-center gap-2 px-6 py-3 bg-[#9D782F] hover:bg-[#8A6827] text-white font-mono text-[10px] font-bold tracking-[0.18em] uppercase transition-colors duration-200 shadow-xs"
-                        >
-                            <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
-                            <span>Add Product</span>
-                        </Link>
-                    </div>
-                </div>
+                <main className="max-w-6xl mx-auto px-5 sm:px-8 lg:px-12 pb-24">
 
-                {/* ════════════════════════════════════════
-                    METRICS SUMMARY ROW — Simple White Cards
-                ════════════════════════════════════════ */}
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 my-10">
-                    <div className="bg-white border border-[#DDD6CA] p-6 flex flex-col justify-between">
-                        <span className="text-[9px] font-semibold font-mono tracking-[0.18em] uppercase text-[#756E63]">
-                            TOTAL PRODUCTS
-                        </span>
-                        <h3 className="text-3xl font-serif text-[#211E1A] font-normal mt-3">
-                            {loading ? '—' : totalProducts}
-                        </h3>
-                    </div>
-
-                    <div className="bg-white border border-[#DDD6CA] p-6 flex flex-col justify-between">
-                        <span className="text-[9px] font-semibold font-mono tracking-[0.18em] uppercase text-[#756E63]">
-                            CATALOG VALUE
-                        </span>
-                        <h3 className="text-3xl font-serif text-[#211E1A] font-normal mt-3 font-mono">
-                            {loading ? '—' : `₹${totalValuation.toLocaleString()}`}
-                        </h3>
-                    </div>
-
-                    <div className="bg-white border border-[#DDD6CA] p-6 flex flex-col justify-between">
-                        <span className="text-[9px] font-semibold font-mono tracking-[0.18em] uppercase text-[#756E63]">
-                            MEDIA GALLERY ITEMS
-                        </span>
-                        <h3 className="text-3xl font-serif text-[#211E1A] font-normal mt-3">
-                            {loading ? '—' : totalImages}
-                        </h3>
-                    </div>
-                </div>
-
-                {/* ════════════════════════════════════════
-                    SEARCH & FILTER CONTROLS — Spacious Bar
-                ════════════════════════════════════════ */}
-                <div className="bg-white border border-[#DDD6CA] p-4 sm:p-5 mb-10 flex flex-col sm:flex-row items-center justify-between gap-4">
-                    {/* Search Bar */}
-                    <div className="relative w-full sm:w-80">
-                        <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-[#999083]" />
-                        <input
-                            type="text"
-                            placeholder="Search title, description or ID..."
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                            className="w-full h-10 bg-white border border-[#DDD6CA] pl-9 pr-8 text-xs text-[#211E1A] placeholder-[#999083] outline-none focus:border-[#9D782F] transition-colors"
-                        />
-                        {searchTerm && (
-                            <button
-                                onClick={() => setSearchTerm('')}
-                                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#999083] hover:text-[#211E1A]"
+                    <div className="mt-12 mb-16 flex flex-col md:flex-row md:items-end justify-between gap-8">
+                        <div>
+                            <p className="text-[10px] uppercase tracking-[0.2em] mb-4 font-medium" style={{ color: '#756E63' }}>
+                                YOUR ATELIER
+                            </p>
+                            <h1
+                                className="text-4xl sm:text-5xl lg:text-6xl font-light mb-4 text-[#211E1A]"
+                                style={{ fontFamily: "'Cormorant Garamond', serif" }}
                             >
-                                <X className="w-3.5 h-3.5" />
-                            </button>
-                        )}
-                    </div>
-
-                    {/* Controls Right */}
-                    <div className="flex items-center justify-between sm:justify-end w-full sm:w-auto gap-4">
-                        {/* Sort Dropdown */}
-                        <div className="flex items-center gap-2">
-                            <ArrowUpDown className="w-3.5 h-3.5 text-[#999083] hidden sm:block" />
-                            <span className="text-[10px] font-mono uppercase tracking-wider text-[#756E63] hidden sm:inline">SORT:</span>
-                            <select
-                                value={sortBy}
-                                onChange={(e) => setSortBy(e.target.value)}
-                                className="h-10 bg-white border border-[#DDD6CA] px-3 text-xs text-[#211E1A] outline-none focus:border-[#9D782F] cursor-pointer"
-                            >
-                                <option value="newest">Newest First</option>
-                                <option value="price-low">Price: Low to High</option>
-                                <option value="price-high">Price: High to Low</option>
-                                <option value="title">Title: A - Z</option>
-                            </select>
+                                Your Collection
+                            </h1>
+                            <p className="text-sm font-light max-w-md" style={{ color: '#9A9287', lineHeight: '1.6' }}>
+                                Manage the pieces that define your Vellique collection.
+                            </p>
                         </div>
 
-                        {/* View Switcher */}
-                        <div className="flex items-center bg-[#F8F5F0] border border-[#DDD6CA] p-1">
-                            <button
-                                onClick={() => setViewMode('grid')}
-                                className={`p-1.5 transition-colors ${viewMode === 'grid' ? 'bg-[#9D782F] text-white' : 'text-[#756E63] hover:text-[#211E1A]'}`}
-                                title="Grid View"
-                            >
-                                <LayoutGrid className="w-4 h-4" />
-                            </button>
-                            <button
-                                onClick={() => setViewMode('list')}
-                                className={`p-1.5 transition-colors ${viewMode === 'list' ? 'bg-[#9D782F] text-white' : 'text-[#756E63] hover:text-[#211E1A]'}`}
-                                title="List View"
-                            >
-                                <List className="w-4 h-4" />
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                {/* ════════════════════════════════════════
-                    PRODUCT LISTING AREA
-                ════════════════════════════════════════ */}
-                {loading ? (
-                    /* Loading Skeleton */
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                        {[1, 2, 3].map((i) => (
-                            <div key={i} className="bg-white border border-[#DDD6CA] overflow-hidden animate-pulse">
-                                <div className="aspect-square bg-[#EBE5DA]" />
-                                <div className="p-6 space-y-3">
-                                    <div className="h-4 bg-[#EBE5DA] w-3/4" />
-                                    <div className="h-3 bg-[#EBE5DA] w-full" />
-                                    <div className="h-4 bg-[#EBE5DA] w-1/3 pt-2" />
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                ) : sortedProducts.length === 0 ? (
-                    /* Empty State */
-                    <div className="bg-white border border-[#DDD6CA] py-16 px-6 text-center max-w-lg mx-auto my-8">
-                        <div className="w-14 h-14 bg-[#F8F5F0] border border-[#DDD6CA] rounded-full flex items-center justify-center text-[#9D782F] mx-auto mb-4">
-                            <ShoppingBag className="w-6 h-6" />
-                        </div>
-                        <h3 className="text-xl font-serif text-[#211E1A] font-normal mb-2">
-                            {searchTerm ? 'No products match your search' : 'No products in your store'}
-                        </h3>
-                        <p className="text-xs text-[#756E63] font-light mb-6">
-                            {searchTerm
-                                ? `No items found matching "${searchTerm}".`
-                                : 'You have not added any products to your catalog yet.'}
-                        </p>
-                        {searchTerm ? (
-                            <button
-                                onClick={() => setSearchTerm('')}
-                                className="px-5 py-2.5 border border-[#DDD6CA] hover:border-[#9D782F] text-[10px] font-mono uppercase tracking-wider text-[#211E1A] transition-colors"
-                            >
-                                Clear Search
-                            </button>
-                        ) : (
+                        <div>
                             <Link
                                 to="/seller/create-product"
-                                className="inline-flex items-center gap-2 px-6 py-3 bg-[#9D782F] hover:bg-[#8A6827] text-white font-mono text-[10px] font-bold tracking-[0.18em] uppercase transition-colors"
+                                className="inline-flex py-4 px-8 text-[11px] uppercase tracking-[0.25em] font-medium transition-all duration-300"
+                                style={{
+                                    backgroundColor: '#211E1A',
+                                    color: '#FFFFFF',
+                                    border: '1px solid #211E1A'
+                                }}
+                                onMouseEnter={e => {
+                                    e.currentTarget.style.backgroundColor = '#9D782F';
+                                    e.currentTarget.style.borderColor = '#9D782F';
+                                    e.currentTarget.style.color = '#211E1A';
+                                }}
+                                onMouseLeave={e => {
+                                    e.currentTarget.style.backgroundColor = '#211E1A';
+                                    e.currentTarget.style.borderColor = '#211E1A';
+                                    e.currentTarget.style.color = '#FFFFFF';
+                                }}
                             >
-                                <Plus className="w-3.5 h-3.5" />
-                                <span>Create Product</span>
+                                + ADD NEW PIECE
                             </Link>
-                        )}
+                        </div>
                     </div>
-                ) : viewMode === 'grid' ? (
-                    /* Grid View */
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                        {sortedProducts.map((product) => {
-                            const coverImg = product.images?.[0]?.url
-                            return (
-                                <div
-                                    key={product._id}
-                                    className="group bg-white border border-[#DDD6CA] hover:border-[#9D782F] transition-all duration-200 flex flex-col justify-between"
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 bg-white border mb-16" style={{ borderColor: '#DDD7CC' }}>
+                        <div className="flex flex-col items-center justify-center p-10 border-b md:border-b-0 md:border-r" style={{ borderColor: '#DDD7CC' }}>
+                            <span className="text-[10px] uppercase tracking-[0.2em] mb-3" style={{ color: '#756E63' }}>
+                                TOTAL PIECES
+                            </span>
+                            <span className="text-5xl font-light text-[#211E1A]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+                                {loading ? '—' : totalProducts}
+                            </span>
+                        </div>
+                        <div className="flex flex-col items-center justify-center p-10 border-b md:border-b-0 md:border-r" style={{ borderColor: '#DDD7CC' }}>
+                            <span className="text-[10px] uppercase tracking-[0.2em] mb-3" style={{ color: '#756E63' }}>
+                                COLLECTION VALUE
+                            </span>
+                            <span className="text-5xl font-light text-[#211E1A]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+                                {loading ? '—' : `₹${totalValuation.toLocaleString()}`}
+                            </span>
+                        </div>
+                        <div className="flex flex-col items-center justify-center p-10">
+                            <span className="text-[10px] uppercase tracking-[0.2em] mb-3" style={{ color: '#756E63' }}>
+                                GALLERY IMAGES
+                            </span>
+                            <span className="text-5xl font-light text-[#211E1A]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+                                {loading ? '—' : totalImages}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div className="bg-white border p-4 sm:p-6 mb-12 flex flex-col md:flex-row items-center justify-between gap-6" style={{ borderColor: '#DDD7CC' }}>
+                        <div className="relative w-full md:w-96 flex items-center">
+                            <Search className="absolute left-0 w-4 h-4" style={{ color: '#9A9287' }} />
+                            <input
+                                type="text"
+                                placeholder="Search your collection..."
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                className="w-full bg-transparent outline-none py-2 pl-8 pr-8 text-sm transition-colors duration-300"
+                                style={{
+                                    color: '#211E1A',
+                                    borderBottom: '1px solid #DDD7CC'
+                                }}
+                                onFocus={e => e.target.style.borderBottomColor = '#9D782F'}
+                                onBlur={e => e.target.style.borderBottomColor = '#DDD7CC'}
+                            />
+                            {searchTerm && (
+                                <button
+                                    onClick={() => setSearchTerm('')}
+                                    className="absolute right-0 p-1 opacity-60 hover:opacity-100 transition-opacity"
                                 >
-                                    {/* Image Box */}
-                                    <div className="relative aspect-square bg-[#F8F5F0] border-b border-[#DDD6CA] overflow-hidden">
-                                        {coverImg ? (
-                                            <img
-                                                src={coverImg}
-                                                alt={product.title}
-                                                className="w-full h-full object-cover object-top group-hover:scale-103 transition-transform duration-300"
-                                            />
-                                        ) : (
-                                            <div className="w-full h-full flex flex-col items-center justify-center text-[#999083]">
-                                                <Package className="w-8 h-8 mb-2" />
-                                                <span className="text-[9px] font-mono uppercase tracking-widest">No Image</span>
-                                            </div>
-                                        )}
+                                    <X className="w-3.5 h-3.5" />
+                                </button>
+                            )}
+                        </div>
 
-                                        {/* Date Badge */}
-                                        <div className="absolute top-3 left-3 bg-white/90 border border-[#DDD6CA] px-2 py-0.5 text-[9px] font-mono text-[#756E63] uppercase">
-                                            {formatDate(product.createdAt)}
-                                        </div>
+                        <div className="flex flex-col sm:flex-row items-center w-full md:w-auto gap-8">
+                            <div className="flex items-center gap-3 w-full sm:w-auto">
+                                <span className="text-[10px] uppercase tracking-[0.2em] whitespace-nowrap" style={{ color: '#756E63' }}>SORT BY</span>
+                                <div className="relative w-full sm:w-48">
+                                    <select
+                                        value={sortBy}
+                                        onChange={(e) => setSortBy(e.target.value)}
+                                        className="w-full bg-transparent outline-none py-2 text-sm transition-colors duration-300 appearance-none cursor-pointer"
+                                        style={{
+                                            color: '#211E1A',
+                                            borderBottom: '1px solid #DDD7CC'
+                                        }}
+                                        onFocus={e => e.target.style.borderBottomColor = '#9D782F'}
+                                        onBlur={e => e.target.style.borderBottomColor = '#DDD7CC'}
+                                    >
+                                        <option value="newest">Newest</option>
+                                        <option value="price-low">Price: Low → High</option>
+                                        <option value="price-high">Price: High → Low</option>
+                                        <option value="title">Title: A → Z</option>
+                                    </select>
+                                    <div className="absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none" style={{ color: '#756E63' }}>
+                                        <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 9l-7 7-7-7" />
+                                        </svg>
                                     </div>
+                                </div>
+                            </div>
 
-                                    {/* Info Box */}
-                                    <div className="p-6 flex-1 flex flex-col justify-between space-y-4">
-                                        <div>
-                                            <h3 className="font-serif text-lg text-[#211E1A] font-normal group-hover:text-[#9D782F] transition-colors line-clamp-1">
-                                                {product.title}
-                                            </h3>
-                                            <p className="mt-1.5 text-xs text-[#756E63] font-light line-clamp-2 leading-relaxed">
-                                                {product.description || 'No description available.'}
-                                            </p>
-                                        </div>
+                            <div className="flex items-center gap-4">
+                                <button
+                                    onClick={() => setViewMode('grid')}
+                                    className="text-[10px] uppercase tracking-[0.2em] font-medium transition-colors duration-300 flex items-center gap-1.5"
+                                    style={{ color: viewMode === 'grid' ? '#211E1A' : '#9A9287' }}
+                                >
+                                    <LayoutGrid className="w-3.5 h-3.5" />
+                                    <span className="hidden sm:inline">GRID</span>
+                                </button>
+                                <button
+                                    onClick={() => setViewMode('list')}
+                                    className="text-[10px] uppercase tracking-[0.2em] font-medium transition-colors duration-300 flex items-center gap-1.5"
+                                    style={{ color: viewMode === 'list' ? '#211E1A' : '#9A9287' }}
+                                >
+                                    <List className="w-3.5 h-3.5" />
+                                    <span className="hidden sm:inline">LIST</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
 
-                                        <div className="pt-4 border-t border-[#EBE5DA] flex items-center justify-between">
-                                            <div>
-                                                <span className="text-[9px] font-mono uppercase tracking-wider text-[#999083] block">PRICE</span>
-                                                <span className="text-base font-mono font-semibold text-[#9D782F]">
-                                                    {formatPrice(product.price)}
-                                                </span>
-                                            </div>
+                    {loading ? (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+                            {[1, 2, 3].map((i) => (
+                                <div key={i} className="animate-pulse bg-white border p-4" style={{ borderColor: '#DDD7CC' }}>
+                                    <div className="aspect-square mb-6" style={{ backgroundColor: '#f7f4ee' }} />
+                                    <div className="h-2 w-16 mb-4" style={{ backgroundColor: '#EBE5DA' }} />
+                                    <div className="h-5 w-3/4 mb-3" style={{ backgroundColor: '#EBE5DA' }} />
+                                    <div className="h-3 w-full mb-1" style={{ backgroundColor: '#EBE5DA' }} />
+                                    <div className="h-3 w-4/5 mb-6" style={{ backgroundColor: '#EBE5DA' }} />
+                                    <div className="h-5 w-1/4" style={{ backgroundColor: '#EBE5DA' }} />
+                                </div>
+                            ))}
+                        </div>
+                    ) : sortedProducts.length === 0 ? (
+                        <div className="bg-white border py-24 px-6 text-center mx-auto" style={{ borderColor: '#DDD7CC' }}>
+                            <h3 className="text-3xl font-light mb-4 text-[#211E1A]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+                                {searchTerm ? 'No pieces found' : 'Your collection is empty'}
+                            </h3>
+                            <p className="text-sm font-light mb-8 max-w-sm mx-auto" style={{ color: '#756E63' }}>
+                                {searchTerm
+                                    ? `No items found matching "${searchTerm}". Try adjusting your filters.`
+                                    : 'Begin building your Vellique collection with your first piece.'}
+                            </p>
+                            {searchTerm ? (
+                                <button
+                                    onClick={() => setSearchTerm('')}
+                                    className="inline-flex py-3 px-8 text-[10px] uppercase tracking-[0.2em] font-medium transition-all duration-300"
+                                    style={{
+                                        backgroundColor: 'transparent',
+                                        color: '#756E63',
+                                        border: '1px solid #DDD7CC'
+                                    }}
+                                    onMouseEnter={e => {
+                                        e.currentTarget.style.borderColor = '#9D782F';
+                                        e.currentTarget.style.color = '#9D782F';
+                                    }}
+                                    onMouseLeave={e => {
+                                        e.currentTarget.style.borderColor = '#DDD7CC';
+                                        e.currentTarget.style.color = '#756E63';
+                                    }}
+                                >
+                                    CLEAR SEARCH
+                                </button>
+                            ) : (
+                                <Link
+                                    to="/seller/create-product"
+                                    className="inline-flex py-4 px-8 text-[11px] uppercase tracking-[0.25em] font-medium transition-all duration-300"
+                                    style={{
+                                        backgroundColor: '#211E1A',
+                                        color: '#FFFFFF',
+                                        border: '1px solid #211E1A'
+                                    }}
+                                    onMouseEnter={e => {
+                                        e.currentTarget.style.backgroundColor = '#9D782F';
+                                        e.currentTarget.style.borderColor = '#9D782F';
+                                        e.currentTarget.style.color = '#211E1A';
+                                    }}
+                                    onMouseLeave={e => {
+                                        e.currentTarget.style.backgroundColor = '#211E1A';
+                                        e.currentTarget.style.borderColor = '#211E1A';
+                                        e.currentTarget.style.color = '#FFFFFF';
+                                    }}
+                                >
+                                    CREATE YOUR FIRST PIECE
+                                </Link>
+                            )}
+                        </div>
+                    ) : viewMode === 'grid' ? (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-x-5 gap-y-8">
+                            {sortedProducts.map((product) => {
+                                const coverImg = product.images?.[0]?.url
 
-                                            <div className="flex items-center gap-2">
-                                                <button
-                                                    onClick={() => handleCopyId(product._id)}
-                                                    className="p-2 border border-[#DDD6CA] hover:border-[#9D782F] text-[#756E63] hover:text-[#211E1A] bg-white transition-colors"
-                                                    title="Copy ID"
-                                                >
-                                                    {copiedId === product._id ? <Check className="w-3.5 h-3.5 text-green-600" /> : <Copy className="w-3.5 h-3.5" />}
-                                                </button>
+                                return (
+                                    <div
+                                        key={product._id}
+                                        className="group bg-white border border-[#DDD6CA] hover:border-[#9D782F] transition-all duration-300 flex flex-col h-[100%]">
+                                        {/* IMAGE */}
+                                        <div className="relative aspect-square bg-[#F8F5F0] overflow-hidden border-b border-[#DDD6CA]">
+                                            {coverImg ? (
+                                                <img
+                                                    src={coverImg}
+                                                    alt={product.title}
+                                                    className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+                                                />
+                                            ) : (
+                                                <div className="w-full h-full flex flex-col items-center justify-center text-[#999083]">
+                                                    <Package className="w-6 h-6 mb-2 stroke-[1]" />
+                                                    <span className="text-[8px] font-mono uppercase tracking-[0.2em]">
+                                                        No Image
+                                                    </span>
+                                                </div>
+                                            )}
 
+                                            {/* Subtle hover overlay */}
+                                            <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+
+                                            {/* View button */}
+                                            <div className="absolute bottom-5 left-0 w-full flex justify-center opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-2 group-hover:translate-y-0">
                                                 <button
                                                     onClick={() => {
                                                         setSelectedProduct(product)
                                                         setSelectedModalImage(0)
                                                     }}
-                                                    className="px-3 py-1.5 border border-[#9D782F] text-[#9D782F] hover:bg-[#9D782F] hover:text-white font-mono text-[9px] uppercase font-bold tracking-widest transition-colors flex items-center gap-1"
+                                                    className="bg-white/95 backdrop-blur-sm text-[#211E1A] text-[9px] uppercase font-medium py-2.5 px-7 border border-[#DDD6CA] hover:text-[#9D782F] hover:border-[#9D782F] transition-all duration-300"
+                                                    style={{ fontFamily: "'DM Mono', monospace" }}
                                                 >
-                                                    <Eye className="w-3 h-3" />
-                                                    <span>View</span>
+                                                    VIEW PIECE
                                                 </button>
                                             </div>
                                         </div>
+
+                                        {/* CONTENT */}
+                                        <div className="px-4.5 py-4 flex flex-col flex-1">
+
+                                            {/* DATE */}
+                                            <div className="mb-2">
+                                                <span
+                                                    className="text-[12px] font-medium uppercase tracking-tight text-[#9A9287]"
+                                                    style={{ fontFamily: "'DM Mono', monospace" }}
+                                                >
+                                                    {formatDate(product.createdAt)}
+                                                </span>
+                                            </div>
+
+                                            {/* TITLE */}
+                                            <h3
+                                                className="text-2xl leading-[1.2] font-medium mb-4 text-[#211E1A] line-clamp-2 transition-colors duration-300 group-hover:text-[#9D782F]"
+                                                style={{
+                                                    fontFamily: "'Cormorant Garamond', serif"
+                                                }}
+                                            >
+                                                {product.title}
+                                            </h3>
+
+                                            {/* DESCRIPTION */}
+                                            <p
+                                                className="text-[11px] font-normal text-[#756E63] line-clamp-2 flex-grow mb-5"
+                                                style={{
+                                                    fontFamily: "'Inter', sans-serif",
+                                                    lineHeight: '1.5'
+                                                }}
+                                            >
+                                                {product.description || 'No description provided.'}
+                                            </p>
+
+                                            {/* FOOTER */}
+                                            <div className="flex items-end justify-between pt-3.5 border-t border-[#EBE5DA] mt-auto">
+
+                                                {/* PRICE */}
+                                                <div>
+                                                    <span
+                                                        className="text-[10px] font-medium uppercase tracking-[0.1em] text-[#999083] block mb-1"
+                                                        style={{ fontFamily: "'DM Mono', monospace" }}
+                                                    >
+                                                        PRICE
+                                                    </span>
+
+                                                    <span
+                                                        className="text-2xl leading-none font-normal text-[#211E1A]"
+                                                        style={{
+                                                            fontFamily: "'Cormorant Garamond', serif"
+                                                        }}
+                                                    >
+                                                        {formatPrice(product.price)}
+                                                    </span>
+                                                </div>
+
+                                                {/* COPY ID */}
+                                                <button
+                                                    onClick={(e) => handleCopyId(product._id, e)}
+                                                    className="text-[8px] font-medium uppercase tracking-[0.12em] flex items-center gap-1.5 transition-colors duration-300 hover:text-[#9D782F]"
+                                                    style={{
+                                                        fontFamily: "'DM Mono', monospace",
+                                                        color: copiedId === product._id
+                                                            ? '#9D782F'
+                                                            : '#999083'
+                                                    }}
+                                                >
+                                                    {copiedId === product._id ? (
+                                                        <>
+                                                            <Check className="w-3 h-3" />
+                                                            COPIED
+                                                        </>
+                                                    ) : (
+                                                        'COPY ID'
+                                                    )}
+                                                </button>
+
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                            )
-                        })}
-                    </div>
-                ) : (
-                    /* List / Table View */
-                    <div className="bg-white border border-[#DDD6CA] overflow-hidden">
-                        <div className="overflow-x-auto">
-                            <table className="w-full text-left border-collapse">
+                                )
+                            })}
+                        </div>
+                    ) : (
+                        <div className="bg-white border overflow-x-auto" style={{ borderColor: '#DDD7CC' }}>
+                            <table className="w-full text-left border-collapse min-w-[800px]">
                                 <thead>
-                                    <tr className="bg-[#F8F5F0] border-b border-[#DDD6CA] text-[9px] font-mono uppercase tracking-[0.18em] text-[#9D782F]">
-                                        <th className="py-4 px-6 font-semibold">PRODUCT</th>
-                                        <th className="py-4 px-6 font-semibold hidden md:table-cell">DESCRIPTION</th>
-                                        <th className="py-4 px-6 font-semibold">PRICE</th>
-                                        <th className="py-4 px-6 font-semibold hidden sm:table-cell">CREATED</th>
-                                        <th className="py-4 px-6 font-semibold text-right">ACTIONS</th>
+                                    <tr className="border-b" style={{ borderColor: '#DDD7CC', backgroundColor: '#fcfaf6' }}>
+                                        <th className="py-5 px-6 text-[10px] uppercase tracking-[0.2em] font-medium" style={{ color: '#756E63' }}>PIECE</th>
+                                        <th className="py-5 px-6 text-[10px] uppercase tracking-[0.2em] font-medium hidden md:table-cell" style={{ color: '#756E63' }}>DESCRIPTION</th>
+                                        <th className="py-5 px-6 text-[10px] uppercase tracking-[0.2em] font-medium" style={{ color: '#756E63' }}>PRICE</th>
+                                        <th className="py-5 px-6 text-[10px] uppercase tracking-[0.2em] font-medium hidden sm:table-cell" style={{ color: '#756E63' }}>CREATED</th>
+                                        <th className="py-5 px-6 text-[10px] uppercase tracking-[0.2em] font-medium text-right" style={{ color: '#756E63' }}>ACTION</th>
                                     </tr>
                                 </thead>
-                                <tbody className="divide-y divide-[#EBE5DA] text-xs">
+                                <tbody>
                                     {sortedProducts.map((product) => {
                                         const coverImg = product.images?.[0]?.url
                                         return (
-                                            <tr key={product._id} className="hover:bg-[#F8F5F0]/60 transition-colors">
+                                            <tr key={product._id} className="border-b last:border-0 hover:bg-[#fcfaf6] transition-colors duration-300" style={{ borderColor: '#EBE5DA' }}>
                                                 <td className="py-4 px-6">
                                                     <div className="flex items-center gap-4">
-                                                        <div className="w-12 h-12 bg-[#F8F5F0] border border-[#DDD6CA] overflow-hidden shrink-0">
+                                                        <div className="w-16 h-16 bg-[#f7f4ee] border overflow-hidden shrink-0" style={{ borderColor: '#DDD7CC' }}>
                                                             {coverImg ? (
-                                                                <img src={coverImg} alt={product.title} className="w-full h-full object-cover" />
+                                                                <img src={coverImg} alt={product.title} className="w-full h-full object-cover object-top" />
                                                             ) : (
-                                                                <div className="w-full h-full flex items-center justify-center text-[#999083]">
-                                                                    <Package className="w-4 h-4" />
+                                                                <div className="w-full h-full flex items-center justify-center text-[#9A9287]">
+                                                                    <span className="text-[8px] uppercase tracking-[0.2em]">NO IMG</span>
                                                                 </div>
                                                             )}
                                                         </div>
                                                         <div>
-                                                            <h4 className="font-serif text-[#211E1A] font-normal text-sm line-clamp-1">{product.title}</h4>
-                                                            <span className="font-mono text-[9px] text-[#999083]">ID: {product._id?.slice(-8)}</span>
+                                                            <h4 className="text-lg font-light text-[#211E1A] line-clamp-1 mb-1" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+                                                                {product.title}
+                                                            </h4>
+                                                            <span className="text-[9px] uppercase tracking-[0.15em] text-[#9A9287]">ID: {product._id?.slice(-8)}</span>
                                                         </div>
                                                     </div>
                                                 </td>
-
-                                                <td className="py-4 px-6 text-[#756E63] font-light hidden md:table-cell max-w-xs">
+                                                <td className="py-4 px-6 text-sm font-light hidden md:table-cell max-w-xs" style={{ color: '#756E63', lineHeight: '1.5' }}>
                                                     <p className="line-clamp-2">{product.description || '—'}</p>
                                                 </td>
-
-                                                <td className="py-4 px-6 font-mono font-semibold text-[#9D782F] whitespace-nowrap">
+                                                <td className="py-4 px-6 font-medium whitespace-nowrap" style={{ color: '#9D782F' }}>
                                                     {formatPrice(product.price)}
                                                 </td>
-
-                                                <td className="py-4 px-6 text-[#756E63] font-mono text-xs hidden sm:table-cell whitespace-nowrap">
+                                                <td className="py-4 px-6 text-[11px] uppercase tracking-[0.1em] hidden sm:table-cell whitespace-nowrap" style={{ color: '#9A9287' }}>
                                                     {formatDate(product.createdAt)}
                                                 </td>
-
                                                 <td className="py-4 px-6 text-right">
-                                                    <div className="flex items-center justify-end gap-2">
+                                                    <div className="flex items-center justify-end gap-6">
                                                         <button
                                                             onClick={(e) => handleCopyId(product._id, e)}
-                                                            className="p-1.5 border border-[#DDD6CA] hover:border-[#9D782F] text-[#756E63] hover:text-[#211E1A] bg-white transition-colors"
-                                                            title="Copy ID"
+                                                            className="text-[9px] uppercase tracking-[0.2em] font-medium transition-colors"
+                                                            style={{ color: copiedId === product._id ? '#2e5235' : '#756E63' }}
                                                         >
-                                                            {copiedId === product._id ? <Check className="w-3.5 h-3.5 text-green-600" /> : <Copy className="w-3.5 h-3.5" />}
+                                                            {copiedId === product._id ? 'COPIED' : 'COPY'}
                                                         </button>
                                                         <button
                                                             onClick={() => {
                                                                 setSelectedProduct(product)
                                                                 setSelectedModalImage(0)
                                                             }}
-                                                            className="px-3 py-1.5 border border-[#9D782F] text-[#9D782F] hover:bg-[#9D782F] hover:text-white font-mono text-[9px] uppercase font-bold tracking-widest transition-colors flex items-center gap-1"
+                                                            className="text-[9px] uppercase tracking-[0.2em] font-medium transition-colors hover:text-[#9D782F]"
+                                                            style={{ color: '#211E1A' }}
                                                         >
-                                                            <Eye className="w-3 h-3" />
-                                                            <span>View</span>
+                                                            VIEW →
                                                         </button>
                                                     </div>
                                                 </td>
@@ -438,108 +539,102 @@ const Dashboard = () => {
                                 </tbody>
                             </table>
                         </div>
-                    </div>
-                )}
-            </main>
+                    )}
+                </main>
 
-            {/* ════════════════════════════════════════
-                QUICK VIEW MODAL — Clean Warm Palette
-            ════════════════════════════════════════ */}
-            {selectedProduct && (
-                <div
-                    className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto"
-                    onClick={() => setSelectedProduct(null)}
-                >
+                {selectedProduct && (
                     <div
-                        className="bg-white border border-[#DDD6CA] max-w-2xl w-full p-6 sm:p-8 relative shadow-xl space-y-6 my-8"
-                        onClick={(e) => e.stopPropagation()}
+                        className="fixed inset-0 z-50 bg-[#211E1A]/40 backdrop-blur-sm flex items-center justify-center p-4 sm:p-6 overflow-y-auto"
+                        onClick={() => setSelectedProduct(null)}
                     >
-                        <button
-                            onClick={() => setSelectedProduct(null)}
-                            className="absolute top-4 right-4 text-[#756E63] hover:text-[#211E1A] p-1 border border-[#DDD6CA] bg-white"
+                        <div
+                            className="bg-white border max-w-4xl w-full p-6 sm:p-10 relative my-auto shadow-2xl flex flex-col lg:flex-row gap-10"
+                            style={{ borderColor: '#DDD7CC' }}
+                            onClick={(e) => e.stopPropagation()}
                         >
-                            <X className="w-4 h-4" />
-                        </button>
+                            <button
+                                onClick={() => setSelectedProduct(null)}
+                                className="absolute top-6 right-6 text-[10px] uppercase tracking-[0.2em] font-medium transition-colors hover:text-[#211E1A]"
+                                style={{ color: '#9A9287' }}
+                            >
+                                CLOSE ✕
+                            </button>
 
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                            {/* Gallery */}
-                            <div className="space-y-3">
-                                <div className="aspect-square bg-[#F8F5F0] border border-[#DDD6CA] overflow-hidden">
+                            <div className="w-full lg:w-1/2 flex flex-col gap-4">
+                                <div className="aspect-square bg-[#f7f4ee] border overflow-hidden" style={{ borderColor: '#DDD7CC' }}>
                                     {selectedProduct.images?.[selectedModalImage]?.url ? (
                                         <img
                                             src={selectedProduct.images[selectedModalImage].url}
                                             alt={selectedProduct.title}
-                                            className="w-full h-full object-cover"
+                                            className="w-full h-full object-cover object-top"
                                         />
                                     ) : (
-                                        <div className="w-full h-full flex flex-col items-center justify-center text-[#999083]">
-                                            <Package className="w-10 h-10 mb-2" />
-                                            <span className="text-[9px] font-mono uppercase">No Image</span>
+                                        <div className="w-full h-full flex items-center justify-center text-[#9A9287]">
+                                            <span className="text-[10px] uppercase tracking-[0.2em]">NO IMAGE PROVIDED</span>
                                         </div>
                                     )}
                                 </div>
-
                                 {selectedProduct.images?.length > 1 && (
-                                    <div className="flex items-center gap-2 overflow-x-auto pb-1">
+                                    <div className="flex items-center gap-3 overflow-x-auto pb-2 scrollbar-hide">
                                         {selectedProduct.images.map((img, idx) => (
                                             <button
                                                 key={img._id || idx}
                                                 onClick={() => setSelectedModalImage(idx)}
-                                                className={`w-12 h-12 border overflow-hidden shrink-0 ${selectedModalImage === idx ? 'border-[#9D782F]' : 'border-[#DDD6CA] opacity-60'}`}
+                                                className="w-16 h-16 border overflow-hidden shrink-0 transition-colors duration-300"
+                                                style={{
+                                                    borderColor: selectedModalImage === idx ? '#9D782F' : '#DDD7CC',
+                                                    opacity: selectedModalImage === idx ? 1 : 0.6
+                                                }}
                                             >
-                                                <img src={img.url} alt="" className="w-full h-full object-cover" />
+                                                <img src={img.url} alt="" className="w-full h-full object-cover object-top" />
                                             </button>
                                         ))}
                                     </div>
                                 )}
                             </div>
 
-                            {/* Details */}
-                            <div className="flex flex-col justify-between space-y-4">
-                                <div className="space-y-3">
-                                    <span className="text-[9px] font-mono uppercase tracking-[0.25em] text-[#9D782F] font-semibold block">
+                            <div className="w-full lg:w-1/2 flex flex-col justify-between pt-2">
+                                <div>
+                                    <span className="text-[10px] uppercase tracking-[0.2em] font-medium block mb-4" style={{ color: '#756E63' }}>
                                         PRODUCT DETAILS
                                     </span>
-                                    <h2 className="text-2xl font-serif text-[#211E1A] font-normal">{selectedProduct.title}</h2>
+                                    <h2 className="text-3xl sm:text-4xl font-light mb-6 text-[#211E1A]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+                                        {selectedProduct.title}
+                                    </h2>
 
-                                    <div>
-                                        <span className="text-[9px] font-mono uppercase tracking-wider text-[#999083] block">PRICE</span>
-                                        <span className="text-lg font-mono font-bold text-[#9D782F]">
+                                    <div className="mb-8">
+                                        <span className="text-2xl font-medium" style={{ color: '#9D782F' }}>
                                             {formatPrice(selectedProduct.price)}
                                         </span>
                                     </div>
 
-                                    <div>
-                                        <span className="text-[9px] font-mono uppercase tracking-wider text-[#999083] block mb-1">DESCRIPTION</span>
-                                        <p className="text-xs text-[#756E63] font-light leading-relaxed max-h-36 overflow-y-auto">
+                                    <div className="mb-10">
+                                        <p className="text-sm font-light leading-relaxed max-h-48 overflow-y-auto pr-2" style={{ color: '#756E63' }}>
                                             {selectedProduct.description || 'No description provided.'}
                                         </p>
                                     </div>
-
-                                    <div className="space-y-1 pt-3 border-t border-[#EBE5DA] text-[10px] font-mono text-[#756E63]">
-                                        <div className="flex justify-between">
-                                            <span>ID:</span>
-                                            <span className="text-[#211E1A] font-semibold">{selectedProduct._id}</span>
-                                        </div>
-                                        <div className="flex justify-between">
-                                            <span>CREATED:</span>
-                                            <span className="text-[#211E1A]">{formatDate(selectedProduct.createdAt)}</span>
-                                        </div>
-                                    </div>
                                 </div>
 
-                                <button
-                                    onClick={() => setSelectedProduct(null)}
-                                    className="w-full py-2.5 bg-[#F8F5F0] hover:bg-[#EBE5DA] text-[#211E1A] text-[10px] font-mono uppercase font-bold tracking-[0.18em] border border-[#DDD6CA] transition-colors"
-                                >
-                                    Close Window
-                                </button>
+                                <div className="border-t pt-6 space-y-4" style={{ borderColor: '#EBE5DA' }}>
+                                    <div className="flex justify-between items-center text-[10px] uppercase tracking-[0.15em]">
+                                        <span style={{ color: '#9A9287' }}>PRODUCT ID</span>
+                                        <span style={{ color: '#211E1A', fontWeight: '500' }}>{selectedProduct._id}</span>
+                                    </div>
+                                    <div className="flex justify-between items-center text-[10px] uppercase tracking-[0.15em]">
+                                        <span style={{ color: '#9A9287' }}>CREATED</span>
+                                        <span style={{ color: '#211E1A', fontWeight: '500' }}>{formatDate(selectedProduct.createdAt)}</span>
+                                    </div>
+                                    <div className="flex justify-between items-center text-[10px] uppercase tracking-[0.15em]">
+                                        <span style={{ color: '#9A9287' }}>IMAGES</span>
+                                        <span style={{ color: '#211E1A', fontWeight: '500' }}>{selectedProduct.images?.length || 0}</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            )}
-        </div>
+                )}
+            </div>
+        </>
     )
 }
 

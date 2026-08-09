@@ -15,3 +15,8 @@ export async function getSellerProduct() {
     const response = await productApi.get("/seller")
     return response.data
 }
+
+export async function getAllProducts() {
+    const response = await productApi.get("/")
+    return response.data
+}

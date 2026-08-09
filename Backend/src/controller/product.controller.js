@@ -51,3 +51,20 @@ export async function getSellerProducts(req, res) {
         products
     }); 
 }
+
+export async function getAllProducts(req, res) {
+    const products = await Product.find();
+
+    if (!products) {
+        return res.status(404).json({
+            message: "No products found",
+            success: false
+        });
+    }
+
+    res.status(200).json({
+        message: "Products retrieved successfully",
+        success: true,
+        products
+    });
+}

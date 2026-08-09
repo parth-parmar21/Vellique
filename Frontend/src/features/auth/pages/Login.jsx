@@ -1,238 +1,238 @@
-import React, { useState } from 'react'
-import { useAuth } from '../hook/useAuth'
-import { useNavigate } from 'react-router-dom'
-import ContinueWithGoogle from '../components/ContinueWithGoogle'
+import React, { useState } from 'react';
+import { useAuth } from "../hook/useAuth";
+import { useNavigate } from "react-router";
+import ContinueWithGoogle from '../components/ContinueWithGoogle';
 
 const Login = () => {
-    const { handleLogin } = useAuth()
-    const [formData, setFormData] = useState({
+    const { handleLogin } = useAuth();
+    const navigate = useNavigate();
+
+    const [ formData, setFormData ] = useState({
         email: '',
-        password: '',
-    })
+        password: ''
+    });
 
-
-    const navigate = useNavigate()
-
-    const handleChange = e => {
-        const { name, value } = e.target
-        setFormData(prev => ({ ...prev, [name]: value }))
-    }
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({ ...prev, [ name ]: value }));
+    };
 
     const handleSubmit = async (e) => {
-        e.preventDefault()
-        await handleLogin({
-            email: formData.email,
-            password: formData.password,
-        })
-
-        navigate('/')
-    }
-
-    const inputStyle = {
-        width: '100%',
-        backgroundColor: '#0d0d0d',
-        border: '1px solid #2e2e2e',
-        borderRadius: '4px',
-        padding: '12px 16px',
-        fontSize: '14px',
-        fontFamily: 'Inter, sans-serif',
-        color: '#211E1A',
-        outline: 'none',
-        transition: 'border-color 0.2s, box-shadow 0.2s',
-        backgroundColor: 'white'
-    }
-
-    const labelStyle = {
-        fontFamily: 'Inter, sans-serif',
-        fontSize: '10px',
-        fontWeight: 600,
-        letterSpacing: '0.18em',
-        textTransform: 'uppercase',
-        color: '#9a9078',
-    }
-
-    const handleFocus = e => {
-        e.target.style.borderColor = '#f5c518'
-        e.target.style.boxShadow = '0 0 0 1px #f5c51840'
-    }
-
-    const handleBlur = e => {
-        e.target.style.borderColor = '#2e2e2e'
-        e.target.style.boxShadow = 'none'
-    }
+        e.preventDefault();
+        try {
+            const user = await handleLogin({ email: formData.email, password: formData.password });
+            if (user.role == "buyer") {
+                navigate("/");
+            } else if (user.role == "seller") {
+                navigate("/seller/dashboard");
+            }
+        } catch (error) {
+            console.error("Login failed", error);
+        }
+    };
 
     return (
-        <div className="h-screen w-full flex flex-col lg:flex-row overflow-hidden bg-[#F8F5F0] text-[#211E1A] font-sans antialiased">
+        <>
+            {/* Google Fonts */}
+            <link
+                href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap"
+                rel="stylesheet"
+            />
 
-            {/* ════════════════════════════════════════
-            LEFT PANEL — Editorial Fashion Visual
-        ════════════════════════════════════════ */}
-            <aside className="hidden lg:flex lg:w-1/2 xl:w-[48%] relative flex-col justify-between overflow-hidden bg-[#1c1a17]">
-
-                {/* Background Image */}
-                <img
-                    src="https://i.pinimg.com/736x/8a/fb/41/8afb41f60ff7ebdf89de13cf0e543c9f.jpg"
-                    alt="Vellique fashion"
-                    className="absolute inset-0 w-full h-full object-cover object-top opacity-90"
-                />
-
-                {/* Warm Editorial Overlays */}
-                <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/60 pointer-events-none" />
-                <div className="absolute inset-0 bg-gradient-to-r from-black/30 via-transparent to-transparent pointer-events-none" />
-
-                {/* Brand */}
-                <div className="relative z-10 px-8 py-7 xl:px-10 xl:py-8">
-                    <span className="font-serif text-white text-lg tracking-[0.25em] uppercase font-normal">
-                        VELLIQUE
-                    </span>
-                </div>
-
-                {/* Editorial Copy */}
-                <div className="relative z-10 px-8 py-8 xl:px-10 xl:py-9">
-
-                    <h2 className="font-serif text-white text-3xl xl:text-[40px] font-normal leading-[1.1] tracking-tight mb-3">
-                        Welcome back
-                        <br />
-                        to Vellique.
-                    </h2>
-
-                    <p className="text-white/80 font-sans text-xs xl:text-sm font-light leading-relaxed max-w-sm tracking-wide">
-                        Continue exploring premium fashion, thoughtfully curated for you.
-                    </p>
-
-                </div>
-
-            </aside>
-
-
-            {/* ════════════════════════════════════════
-            RIGHT PANEL — Login Form
-        ════════════════════════════════════════ */}
-            <main className="flex-1 h-screen flex items-center justify-center overflow-y-auto bg-[#F8F5F0] px-5 py-6 sm:px-8 lg:px-10 xl:px-14">
-
-                <div className="w-full max-w-[410px]">
-
-                    {/* Mobile Brand */}
-                    <div className="lg:hidden text-center mb-5">
-                        <span className="font-serif text-[#9D782F] text-lg tracking-[0.25em] uppercase font-medium">
-                            VELLIQUE
-                        </span>
-                    </div>
-
-
-                    {/* Header */}
-                    <header className="text-center mb-6">
-
-                        <span className="text-[9px] sm:text-[15px] font-mono uppercase tracking-[0.1em] text-[#9D782F] font-semibold block mb-1.5">
-                            WELCOME BACK
-                        </span>
-
-                        <h1 className="text-[28px] sm:text-4xl font-serif text-[#211E1A] font-normal tracking-tight mb-1.5">
-                            Sign in to Vellique
-                        </h1>
-
-                        <p className="text-[11px] sm:text-xs text-[#756E63] font-light leading-relaxed">
-                            Welcome back! Please enter your details.
-                        </p>
-
-                    </header>
-
-
-                    {/* Login Form */}
-                    <form
-                        onSubmit={handleSubmit}
-                        className="flex flex-col gap-4"
-                    >
-
-                        {/* Email */}
-                        <div className="flex flex-col gap-1">
-
-                            <label
-                                htmlFor="email"
-                                className="text-[9px] font-semibold font-mono tracking-[0.18em] uppercase text-[#211E1A]"
-                            >
-                                EMAIL
-                            </label>
-
-                            <input
-                                id="email"
-                                name="email"
-                                type="email"
-                                placeholder="jane@example.com"
-                                value={formData.email}
-                                onChange={handleChange}
-                                autoComplete="off"
-                                required
-                                className="w-full h-[42px] bg-white border border-[#DDD6CA] px-3.5 text-[13px] text-[#211E1A] placeholder-[#999083] outline-none rounded-none focus:border-[#9D782F] transition-colors duration-200"
-                                onFocus={handleFocus}
-                                onBlur={handleBlur}
-                            />
-
-                        </div>
-
-
-                        {/* Password */}
-                        <div className="flex flex-col gap-1">
-
-                            <label
-                                htmlFor="password"
-                                className="text-[9px] font-semibold font-mono tracking-[0.18em] uppercase text-[#211E1A]"
-                            >
-                                PASSWORD
-                            </label>
-
-                            <input
-                                id="password"
-                                name="password"
-                                type="password"
-                                placeholder="••••••••"
-                                value={formData.password}
-                                onChange={handleChange}
-                                autoComplete="off"
-                                required
-                                className="w-full h-[42px] bg-white border border-[#DDD6CA] px-3.5 text-[13px] text-[#211E1A] placeholder-[#999083] outline-none rounded-none focus:border-[#9D782F] transition-colors duration-200"
-                                onFocus={handleFocus}
-                                onBlur={handleBlur}
-                            />
-
-                        </div>
-
-
-                        {/* Sign In Button */}
-                        <button
-                            type="submit"
-                            className="w-full h-[44px] bg-[#9D782F] hover:bg-[#8A6827] text-white font-mono text-[10px] font-bold tracking-[0.18em] uppercase rounded-none shadow-sm transition-colors duration-200 cursor-pointer mt-1"
+            <div
+                className="h-screen flex flex-col lg:flex-row selection:bg-[#C9A96E]/30"
+                style={{ backgroundColor: '#fbf9f6', fontFamily: "'Inter', sans-serif" }}
+            >
+                {/* ── LEFT: Editorial Image Panel ── */}
+                <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden" style={{ backgroundColor: '#f5f3f0' }}>
+                    <img
+                        src="https://i.pinimg.com/736x/05/1b/f7/051bf793b1c5bbc349bd916f5998fa36.jpg"
+                        alt="Vellique Fashion Editorial"
+                        className="absolute inset-0 w-full h-full object-cover object-top"
+                        style={{ filter: 'brightness(0.97)' }}
+                    />
+                    {/* Subtle warm overlay */}
+                    <div
+                        className="absolute inset-0"
+                        style={{ background: 'linear-gradient(to top, rgba(27,24,20,0.62) 0%, rgba(27,24,20,0.08) 45%, transparent 100%)' }}
+                    />
+                    <div className="absolute inset-0 p-14 flex flex-col justify-between z-10">
+                        {/* Brand */}
+                        <span
+                            className="text-sm font-medium tracking-[0.35em] uppercase"
+                            style={{ fontFamily: "'Cormorant Garamond', serif", color: '#C9A96E', letterSpacing: '0.35em' }}
                         >
-                            SIGN IN
-                        </button>
-
-
-                        {/* Google */}
-                        <ContinueWithGoogle />
-
-
-                        {/* Sign Up */}
-                        <p className="text-center text-[11px] text-[#756E63] mt-1 font-light">
-
-                            Don't have an account?
-
-                            <a
-                                href="/register"
-                                className="text-[#9D782F] font-medium hover:underline transition-colors ml-1"
+                            Vellique.
+                        </span>
+                        {/* Editorial Headline */}
+                        <div>
+                            <p
+                                className="text-5xl xl:text-6xl font-light leading-[1.08] text-white mb-5"
+                                style={{ fontFamily: "'Cormorant Garamond', serif" }}
                             >
-                                Register
-                            </a>
-
-                        </p>
-
-                    </form>
-
+                                Welcome<br />
+                                <em>back.</em>
+                            </p>
+                            <p className="text-sm font-light leading-relaxed max-w-xs" style={{ color: 'rgba(255,255,255,0.65)' }}>
+                                Sign in to explore the latest exclusive drops and manage your aesthetic.
+                            </p>
+                        </div>
+                    </div>
                 </div>
 
-            </main>
+                {/* ── RIGHT: Form Panel ── */}
+                <div
+                    className="w-full lg:w-1/2 flex items-center justify-center min-h-screen px-8 sm:px-14 lg:px-20 py-16"
+                    style={{ backgroundColor: '#fbf9f6' }}
+                >
+                    <div className="w-full max-w-sm">
 
-        </div>
-    )
-}
+                        {/* Mobile brand mark */}
+                        <div className="lg:hidden mb-14">
+                            <span
+                                className="text-sm tracking-[0.35em] uppercase"
+                                style={{ fontFamily: "'Cormorant Garamond', serif", color: '#C9A96E' }}
+                            >
+                                Vellique.
+                            </span>
+                        </div>
 
-export default Login
+                        {/* Header */}
+                        <div className="mb-14">
+                            <p
+                                className="text-[10px] uppercase tracking-[0.22em] mb-4 font-medium"
+                                style={{ color: '#C9A96E' }}
+                            >
+                                Sign in to Vellique
+                            </p>
+                            <h1
+                                className="text-[2.6rem] xl:text-5xl font-light"
+                                style={{ fontFamily: "'Cormorant Garamond', serif", color: '#1b1c1a' }}
+                            >
+                                Enter the Vault
+                            </h1>
+                        </div>
+
+                        {/* Form */}
+                        <form onSubmit={handleSubmit} className="flex flex-col gap-10">
+
+                            {/* Email */}
+                            <div className="flex flex-col gap-2">
+                                <label
+                                    htmlFor="login-email"
+                                    className="text-[10px] uppercase tracking-[0.18em] font-medium"
+                                    style={{ color: '#7A6E63' }}
+                                >
+                                    Email Address
+                                </label>
+                                <input
+                                    id="login-email"
+                                    type="email"
+                                    name="email"
+                                    value={formData.email}
+                                    onChange={handleChange}
+                                    required
+                                    placeholder="hello@example.com"
+                                    className="w-full bg-transparent outline-none py-3 text-sm transition-colors duration-300"
+                                    style={{
+                                        color: '#1b1c1a',
+                                        borderBottom: '1px solid #d0c5b5',
+                                        fontFamily: "'Inter', sans-serif"
+                                    }}
+                                    onFocus={e => e.target.style.borderBottomColor = '#C9A96E'}
+                                    onBlur={e => e.target.style.borderBottomColor = '#d0c5b5'}
+                                />
+                            </div>
+
+                            {/* Password */}
+                            <div className="flex flex-col gap-2">
+                                <div className="flex items-center justify-between">
+                                    <label
+                                        htmlFor="login-password"
+                                        className="text-[10px] uppercase tracking-[0.18em] font-medium"
+                                        style={{ color: '#7A6E63' }}
+                                    >
+                                        Password
+                                    </label>
+                                    <a
+                                        href="#"
+                                        className="text-[10px] transition-colors duration-200"
+                                        style={{ color: '#B5ADA3' }}
+                                        onMouseEnter={e => e.target.style.color = '#C9A96E'}
+                                        onMouseLeave={e => e.target.style.color = '#B5ADA3'}
+                                    >
+                                        Forgot password?
+                                    </a>
+                                </div>
+                                <input
+                                    id="login-password"
+                                    type="password"
+                                    name="password"
+                                    value={formData.password}
+                                    onChange={handleChange}
+                                    required
+                                    placeholder="••••••••"
+                                    className="w-full bg-transparent outline-none py-3 text-sm transition-colors duration-300"
+                                    style={{
+                                        color: '#1b1c1a',
+                                        borderBottom: '1px solid #d0c5b5',
+                                        fontFamily: "'Inter', sans-serif"
+                                    }}
+                                    onFocus={e => e.target.style.borderBottomColor = '#C9A96E'}
+                                    onBlur={e => e.target.style.borderBottomColor = '#d0c5b5'}
+                                />
+                            </div>
+
+                            {/* Sign In Button */}
+                            <button
+                                type="submit"
+                                className="w-full py-4 text-[11px] uppercase tracking-[0.25em] font-medium transition-all duration-300 mt-2"
+                                style={{
+                                    backgroundColor: '#1b1c1a',
+                                    color: '#fbf9f6',
+                                    fontFamily: "'Inter', sans-serif"
+                                }}
+                                onMouseEnter={e => {
+                                    e.currentTarget.style.backgroundColor = '#C9A96E';
+                                    e.currentTarget.style.color = '#1b1c1a';
+                                }}
+                                onMouseLeave={e => {
+                                    e.currentTarget.style.backgroundColor = '#1b1c1a';
+                                    e.currentTarget.style.color = '#fbf9f6';
+                                }}
+                            >
+                                Sign In
+                            </button>
+
+                            {/* Divider */}
+                            <div className="flex items-center gap-4">
+                                <div className="flex-1 h-px" style={{ backgroundColor: '#e4e2df' }} />
+                                <span className="text-[10px] uppercase tracking-[0.15em]" style={{ color: '#B5ADA3' }}>or</span>
+                                <div className="flex-1 h-px" style={{ backgroundColor: '#e4e2df' }} />
+                            </div>
+
+                            {/* Google SSO */}
+                            <ContinueWithGoogle />
+
+                            {/* Footer Link */}
+                            <p className="text-center text-[11px]" style={{ color: '#B5ADA3' }}>
+                                Don&apos;t have an account?{' '}
+                                <a
+                                    href="/register"
+                                    className="transition-colors duration-200"
+                                    style={{ color: '#7A6E63', textDecoration: 'underline', textUnderlineOffset: '3px' }}
+                                    onMouseEnter={e => e.target.style.color = '#C9A96E'}
+                                    onMouseLeave={e => e.target.style.color = '#7A6E63'}
+                                >
+                                    Sign up
+                                </a>
+                            </p>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </>
+    );
+};
+
+export default Login;

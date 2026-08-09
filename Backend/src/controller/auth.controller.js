@@ -101,3 +101,22 @@ export async function googleCallback(req, res) {
 
     res.redirect("http://localhost:5173/")
 }
+
+export async function getMe(req, res) {
+    const user = await User.findById(req.user.id);
+
+    if (!user) {
+        return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({
+        success: true,
+        user: {
+            id: user._id,
+            email: user.email,
+            contact: user.contact,
+            fullName: user.fullName,
+            role: user.role
+        }
+    });
+}
