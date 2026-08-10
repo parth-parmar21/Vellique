@@ -20,3 +20,8 @@ export async function getAllProducts() {
     const response = await productApi.get("/")
     return response.data
 }
+
+export async function getProductById(productId) {
+    const response = await productApi.get(`/${productId}`)
+    return response.data
+}

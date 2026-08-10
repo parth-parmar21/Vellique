@@ -25,9 +25,16 @@ export const useProducts = () => {
         return data.products
     }
 
+    async function handleGetProductById(productId) {
+        const data = await getProductById(productId)
+        dispatch(setProducts(data.product))
+        // return data.product
+    }
+
     return {
         handleCreateProduct,
         handleGetSellerProduct,
-        handleGetAllProducts
+        handleGetAllProducts,
+        handleGetProductById
     }
 }

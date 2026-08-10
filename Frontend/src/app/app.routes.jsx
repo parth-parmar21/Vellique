@@ -5,11 +5,16 @@ import CreateProduct from "../features/products/pages/CreateProduct";
 import Dashboard from "../features/products/pages/Dashboard";
 import Protected from "../features/auth/components/Protected";
 import Home from "../features/products/pages/Home";
+import ProductDetails from "../features/products/pages/ProductDetails";
 
 export const appRoutes = createBrowserRouter([
     {
         path: '/',
         element: <Home />
+    },
+    {
+        path: '/product/:id',
+        element: <ProductDetails />
     },
     {
         path: '/login',

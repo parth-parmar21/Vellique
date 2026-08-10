@@ -68,3 +68,21 @@ export async function getAllProducts(req, res) {
         products
     });
 }
+
+export async function getProductById(req, res) {
+    const { productId } = req.params
+
+    const product = await Product.findById(productId)
+
+    if (!product) {
+        return res.status(404).json({
+            message: "Product not found.",
+            success: false
+        })
+    }
+
+    return res.status(200).json({
+        message: "Get product successfully",
+        product
+    })
+}

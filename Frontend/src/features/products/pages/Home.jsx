@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useProducts } from '../hook/useProduct'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import {
     Search,
     ShoppingBag,
@@ -51,7 +51,7 @@ const formatDate = (isoString) => {
 }
 
 const Home = () => {
-    const { handleGetAllProducts } = useProducts()
+    const { handleGetAllProducts, handleGetProductById } = useProducts()
 
     const products = useSelector((state) => state.product.allProducts) || []
     const user = useSelector((state) => state.auth.user)
@@ -62,6 +62,7 @@ const Home = () => {
     const [selectedProduct, setSelectedProduct] = useState(null)
     const [selectedModalImage, setSelectedModalImage] = useState(0)
     const [wishlist, setWishlist] = useState([])
+    const navigate = useNavigate()
 
     useEffect(() => {
         let isMounted = true
@@ -541,14 +542,14 @@ const Home = () => {
                                             style={{
                                                 animation: `productReveal 0.6s ease-out ${index * 0.06}s both`,
                                             }}
+                                            onClick={() => {
+                                                navigate(`/product/${product._id}`);
+                                            }}
                                         >
                                             {/* Image Container */}
                                             <div
                                                 className="relative aspect-square overflow-hidden cursor-pointer bg-[#fbf9f6] border border-[#DDD7CC] transition-all duration-500 group-hover:border-[#9D782F]"
-                                                onClick={() => {
-                                                    setSelectedProduct(product)
-                                                    setSelectedModalImage(0)
-                                                }}
+
                                             >
                                                 {/* Product Image */}
                                                 {coverImg ? (
@@ -608,37 +609,36 @@ const Home = () => {
                                                     }
                                                 >
                                                     <Heart
-                                                        className={`w-3.5 h-3.5 transition-all duration-300 ${
-                                                            isWishlisted
+                                                        className={`w-3.5 h-3.5 transition-all duration-300 ${isWishlisted
                                                                 ? 'fill-[#9D782F] text-[#9D782F] scale-110'
                                                                 : 'text-[#756E63]'
-                                                        }`}
+                                                            }`}
                                                     />
                                                 </button>
 
                                                 {/* Image Count */}
                                                 {product.images?.length >
                                                     1 && (
-                                                    <div className="absolute bottom-3 left-3 px-2.5 py-1 bg-white/90 backdrop-blur-sm border border-[#DDD7CC]">
-                                                        <span
-                                                            className="text-[8px] uppercase tracking-[0.15em] text-[#756E63]"
-                                                            style={{
-                                                                fontFamily:
-                                                                    "'DM Mono', monospace",
-                                                            }}
-                                                        >
-                                                            {String(
-                                                                product
-                                                                    .images
-                                                                    .length
-                                                            ).padStart(
-                                                                2,
-                                                                '0'
-                                                            )}{' '}
-                                                            Photos
-                                                        </span>
-                                                    </div>
-                                                )}
+                                                        <div className="absolute bottom-3 left-3 px-2.5 py-1 bg-white/90 backdrop-blur-sm border border-[#DDD7CC]">
+                                                            <span
+                                                                className="text-[8px] uppercase tracking-[0.15em] text-[#756E63]"
+                                                                style={{
+                                                                    fontFamily:
+                                                                        "'DM Mono', monospace",
+                                                                }}
+                                                            >
+                                                                {String(
+                                                                    product
+                                                                        .images
+                                                                        .length
+                                                                ).padStart(
+                                                                    2,
+                                                                    '0'
+                                                                )}{' '}
+                                                                Photos
+                                                            </span>
+                                                        </div>
+                                                    )}
 
                                                 {/* View Piece */}
                                                 <div className="absolute bottom-5 left-1/2 -translate-x-1/2 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 z-10">
@@ -859,12 +859,12 @@ const Home = () => {
                                                         style={{
                                                             borderColor:
                                                                 selectedModalImage ===
-                                                                idx
+                                                                    idx
                                                                     ? '#9D782F'
                                                                     : '#DDD6CA',
                                                             opacity:
                                                                 selectedModalImage ===
-                                                                idx
+                                                                    idx
                                                                     ? 1
                                                                     : 0.55,
                                                         }}
