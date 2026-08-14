@@ -25,3 +25,8 @@ export async function getProductById(productId) {
     const response = await productApi.get(`/${productId}`)
     return response.data
 }
+
+export async function updateProduct(productId, formData) {
+    const response = await productApi.post(`/${productId}/variants`, formData)
+    return response.data
+}

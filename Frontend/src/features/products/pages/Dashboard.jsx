@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useProducts } from '../hook/useProduct'
 import { useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import {
     Search,
     LayoutGrid,
@@ -52,6 +52,7 @@ const Dashboard = () => {
     const [copiedId, setCopiedId] = useState(null)
     const [selectedModalImage, setSelectedModalImage] = useState(0)
 
+    const navigate = useNavigate()
     useEffect(() => {
         let isMounted = true
         async function fetchProducts() {
@@ -347,6 +348,7 @@ const Dashboard = () => {
 
                                 return (
                                     <div
+                                    onClick={() => navigate(`/seller/product/${product._id}`)}
                                         key={product._id}
                                         className="group bg-white border border-[#DDD6CA] hover:border-[#9D782F] transition-all duration-300 flex flex-col h-[100%]">
                                         {/* IMAGE */}
