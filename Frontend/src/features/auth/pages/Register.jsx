@@ -31,7 +31,7 @@ const Register = () => {
             contact: formData.contactNumber,
             password: formData.password,
             isSeller: formData.isSeller,
-            fullname: formData.fullName
+            fullName: formData.fullName
         });
 
         navigate("/");
