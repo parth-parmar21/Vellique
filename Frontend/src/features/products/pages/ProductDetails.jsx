@@ -65,8 +65,8 @@ const normalizeAttributes = (attrs) => {
    FONT SHORTHANDS (module-level so sub-components can use them)
 ───────────────────────────────────────────────────────────── */
 const serif = { fontFamily: "'Cormorant Garamond', serif" }
-const mono  = { fontFamily: "'DM Mono', monospace" }
-const sans  = { fontFamily: "'Inter', sans-serif" }
+const mono = { fontFamily: "'DM Mono', monospace" }
+const sans = { fontFamily: "'Inter', sans-serif" }
 
 /* ─────────────────────────────────────────────────────────────
    SUB-COMPONENT: VariantOption
@@ -178,17 +178,17 @@ const ProductDetails = () => {
     const navigate = useNavigate()
     const { handleGetAllProducts } = useProducts()
 
-    const user        = useSelector((s) => s.auth.user)
+    const user = useSelector((s) => s.auth.user)
     const allProducts = useSelector((s) => s.product.allProducts) || []
 
     /* ── Local state ── */
-    const [product,            setProduct]            = useState(null)
-    const [loading,            setLoading]            = useState(true)
-    const [error,              setError]              = useState(null)
-    const [selectedImage,      setSelectedImage]      = useState(0)
-    const [wishlist,           setWishlist]           = useState([])
+    const [product, setProduct] = useState(null)
+    const [loading, setLoading] = useState(true)
+    const [error, setError] = useState(null)
+    const [selectedImage, setSelectedImage] = useState(0)
+    const [wishlist, setWishlist] = useState([])
     const [selectedAttributes, setSelectedAttributes] = useState({})
-    const [selectedVariant,    setSelectedVariant]    = useState(null)
+    const [selectedVariant, setSelectedVariant] = useState(null)
 
     /* ── Fetch single product ── */
     useEffect(() => {
@@ -228,14 +228,14 @@ const ProductDetails = () => {
 
     /* ── Derive selectedVariant whenever selectedAttributes changes ── */
     useEffect(() => {
-        if (!product?.varients?.length) {
+        if (!product?.variants?.length) {
             setSelectedVariant(null)
             return
         }
 
         const attributeGroups = [
             ...new Set(
-                product.varients.flatMap((v) =>
+                product.variants.flatMap((v) =>
                     Object.keys(normalizeAttributes(v.attributes))
                 )
             ),
@@ -251,7 +251,7 @@ const ProductDetails = () => {
             return
         }
 
-        const match = product.varients.find((v) => {
+        const match = product.variants.find((v) => {
             const attrs = normalizeAttributes(v.attributes)
             return attributeGroups.every(
                 (key) => attrs[key] === selectedAttributes[key]
@@ -293,19 +293,19 @@ const ProductDetails = () => {
     const isWishlisted = wishlist.includes(id)
 
     /* ── Variant helpers ── */
-    const attributeGroups = product?.varients?.length
+    const attributeGroups = product?.variants?.length
         ? [
-              ...new Set(
-                  product.varients.flatMap((v) =>
-                      Object.keys(normalizeAttributes(v.attributes))
-                  )
-              ),
-          ]
+            ...new Set(
+                product.variants.flatMap((v) =>
+                    Object.keys(normalizeAttributes(v.attributes))
+                )
+            ),
+        ]
         : []
 
     const uniqueValuesForKey = (key) => [
         ...new Set(
-            product?.varients
+            product?.variants
                 ?.map((v) => normalizeAttributes(v.attributes)[key])
                 .filter(Boolean)
         ),
@@ -318,9 +318,9 @@ const ProductDetails = () => {
      */
     const isOptionAvailable = useCallback(
         (attributeKey, value) => {
-            if (!product?.varients) return true
+            if (!product?.variants) return true
             const hypothetical = { ...selectedAttributes, [attributeKey]: value }
-            return product.varients.some((v) => {
+            return product.variants.some((v) => {
                 const attrs = normalizeAttributes(v.attributes)
                 return Object.entries(hypothetical).every(
                     ([k, val]) => attrs[k] === val
@@ -343,20 +343,21 @@ const ProductDetails = () => {
     }
 
     /* ── Derived display values ── */
-    const displayPrice  = selectedVariant?.price ?? product?.price
-    const hasVarients   = product?.varients?.length > 0
+    const displayPrice = selectedVariant?.price?.amount ? selectedVariant.price : product?.price
+    const hasVariants = product?.variants?.length > 0
     const allAttrsChosen = attributeGroups.length > 0
         && attributeGroups.every((k) => selectedAttributes[k] !== undefined)
 
     const addToBagState = (() => {
-        if (!hasVarients) return 'enabled'
+        if (!hasVariants) return 'enabled'
         if (!allAttrsChosen) return 'select'
-        if (selectedVariant && selectedVariant.stock === 0) return 'soldout'
+        const stockToCheck = selectedVariant ? (selectedVariant.stock ?? product?.stock) : null
+        if (selectedVariant && stockToCheck === 0) return 'soldout'
         if (selectedVariant) return 'enabled'
         return 'select'
     })()
 
-    const stockToShow = selectedVariant?.stock
+    const stockToShow = selectedVariant?.stock ?? product?.stock
 
     /* ================================================================
        SHARED SECTIONS
@@ -917,7 +918,7 @@ const ProductDetails = () => {
                                 {/* ─────────────────────────────────────
                                     VARIANT SELECTOR
                                 ───────────────────────────────────── */}
-                                {hasVarients && (
+                                {hasVariants && (
                                     <div className="mb-5">
                                         {attributeGroups.map((key) => (
                                             <VariantAttributeGroup
@@ -937,16 +938,16 @@ const ProductDetails = () => {
 
                                 {/* Stock Status */}
                                 <div className="mb-5 min-h-[1.25rem]">
-                                    {hasVarients && allAttrsChosen && selectedVariant ? (
-                                        <StockStatus stock={selectedVariant.stock} />
-                                    ) : !hasVarients ? (
+                                {hasVariants && allAttrsChosen && selectedVariant ? (
+                                        <StockStatus stock={stockToShow} />
+                                    ) : !hasVariants ? (
                                         <span
                                             className="text-[8px] uppercase tracking-[0.22em] text-[#756E63]"
                                             style={mono}
                                         >
                                             In Stock
                                         </span>
-                                    ) : hasVarients && allAttrsChosen && !selectedVariant ? (
+                                    ) : hasVariants && allAttrsChosen && !selectedVariant ? (
                                         <span
                                             className="text-[8px] uppercase tracking-[0.22em] text-[#999083]"
                                             style={mono}
@@ -996,8 +997,8 @@ const ProductDetails = () => {
                                                 addToBagState === 'soldout'
                                                     ? 'Sold out'
                                                     : addToBagState === 'select'
-                                                    ? 'Select options'
-                                                    : 'Add to bag'
+                                                        ? 'Select options'
+                                                        : 'Add to bag'
                                             }
                                         >
                                             {addToBagState === 'soldout' ? (
@@ -1019,11 +1020,10 @@ const ProductDetails = () => {
                                             aria-label={isWishlisted ? 'Remove from wishlist' : 'Add to wishlist'}
                                         >
                                             <Heart
-                                                className={`w-4 h-4 transition-all duration-300 ${
-                                                    isWishlisted
+                                                className={`w-4 h-4 transition-all duration-300 ${isWishlisted
                                                         ? 'fill-[#9D782F] text-[#9D782F]'
                                                         : 'text-[#756E63]'
-                                                }`}
+                                                    }`}
                                             />
                                         </button>
                                     </div>
@@ -1100,7 +1100,7 @@ const ProductDetails = () => {
                                 {/* Related Products Grid */}
                                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-[clamp(1rem,2vw,1.5rem)] gap-y-[clamp(1.5rem,3vh,2.5rem)]">
                                     {relatedProducts.map((rp) => {
-                                        const rpCover     = rp.images?.[0]?.url
+                                        const rpCover = rp.images?.[0]?.url
                                         const rpWishlisted = wishlist.includes(rp._id)
 
                                         return (
@@ -1143,11 +1143,10 @@ const ProductDetails = () => {
                                                         }
                                                     >
                                                         <Heart
-                                                            className={`w-3 h-3 transition-all duration-300 ${
-                                                                rpWishlisted
+                                                            className={`w-3 h-3 transition-all duration-300 ${rpWishlisted
                                                                     ? 'fill-[#9D782F] text-[#9D782F]'
                                                                     : 'text-[#756E63]'
-                                                            }`}
+                                                                }`}
                                                         />
                                                     </button>
                                                 </Link>

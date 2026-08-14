@@ -34,7 +34,7 @@ const Register = () => {
             fullName: formData.fullName
         });
 
-        navigate("/");
+        navigate("/login");
     };
 
     const inputStyle = {
