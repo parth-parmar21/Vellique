@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { stockOfVariant } from "../dao/product.dao.js";
 import { Cart } from "../model/cart.model.js";
 import { Product } from "../model/product.model.js";
@@ -71,13 +72,67 @@ export async function addToCart(req, res) {
 }
 
 export async function getCart(req, res) {
-    // FIX: change user -> userId
-    const cart = (await Cart.findOne({ userId: req.user._id }).populate("items.product")) || (await Cart.create({ userId: req.user._id }))
+    const result = await Cart.aggregate([
+        {
+            $match: {
+                userId: new mongoose.Types.ObjectId(req.user._id)
+            }
+        },
+        { $unwind: { path: '$items' } },
+        {
+            $lookup: {
+                from: 'products',
+                localField: 'items.product',
+                foreignField: '_id',
+                as: 'items.product'
+            }
+        },
+        { $unwind: { path: '$items.product' } },
+        {
+            $unwind: { path: '$items.product.variants' }
+        },
+        {
+            $match: {
+                $expr: {
+                    $eq: [
+                        '$items.variant',
+                        '$items.product.variants._id'
+                    ]
+                }
+            }
+        },
+        {
+            $addFields: {
+                itemPrice: {
+                    price: {
+                        $multiply: [
+                            '$items.quantity',
+                            '$items.product.variants.price.amount'
+                        ]
+                    },
+                    currency:
+                        '$items.product.variants.price.currency'
+                }
+            }
+        },
+        {
+            $group: {
+                _id: '$_id',
+                totalPrice: { $sum: '$itemPrice.price' },
+                currency: {
+                    $first: '$itemPrice.currency'
+                },
+                items: { $push: '$items' }
+            }
+        }
+    ])
+
+    const cart = result[0] || null
 
     return res.status(200).json({
         message: "Cart retrieved successfully",
         success: true,
-        data: cart
+        cart
     });
 }
 

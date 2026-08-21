@@ -27,13 +27,17 @@ const CartPage = () => {
     const user = useSelector((state) => state.auth.user)
     const cartItems = useSelector((state) => state.cart.items) || []
 
+
+    console.log(cartItems);
+
+
+
     const [actionLoading, setActionLoading] = useState(null) // tracks if an item is being updated
     const [checkoutComplete, setCheckoutComplete] = useState(false)
 
     // Helper: Find selected variant attributes
     const getVariantDetails = (item) => {
-        if (!item.product?.variants) return null
-        const variantObj = item.product.variants.find(v => v._id === item.variant)
+        const variantObj = item.product.variants
         if (!variantObj || !variantObj.attributes) return null
 
         // If attributes is a Map-like structure
@@ -46,7 +50,7 @@ const CartPage = () => {
     // Helper: Get product image (variant image if available, else cover image)
     const getProductImage = (item) => {
         if (!item.product?.variants) return null
-        const variantObj = item.product.variants.find(v => v._id === item.variant)
+        const variantObj = item.product.variants
         if (variantObj && variantObj.images?.[0]?.url) {
             return variantObj.images[0].url
         }
@@ -85,18 +89,22 @@ const CartPage = () => {
             setActionLoading(null)
         }
     }
+    const currencyTotals = cartItems.reduce((acc, item) => {
+        const amount = item.product?.variants?.price?.amount || 0
+        const currency = item.product?.variants?.price?.currency
 
-    // Math
-    const calculateSubtotal = () => {
-        return cartItems.reduce((acc, item) => {
-            const price = item.price?.amount || 0
-            return acc + price * item.quantity
-        }, 0)
-    }
+        if (!currency) return acc
 
-    const subtotal = calculateSubtotal()
-    const currency = cartItems[0]?.price?.currency || 'INR'
-    const formattedSubtotal = formatPrice({ amount: subtotal, currency })
+        acc[currency] = (acc[currency] || 0) + amount * item.quantity
+
+        return acc
+    }, {})
+
+    const formattedSubtotal = Object.entries(currencyTotals)
+        .map(([currency, amount]) =>
+            formatPrice({ amount, currency })
+        )
+        .join(' + ')
 
     // Styling Tokens
     const serif = { fontFamily: "'Cormorant Garamond', serif" }
@@ -243,7 +251,7 @@ const CartPage = () => {
                                                         </Link>
 
                                                         <span className="text-base font-normal text-[#211E1A] whitespace-nowrap" style={serif}>
-                                                            {formatPrice({ amount: itemSubtotal, currency })}
+                                                            {formatPrice({ amount: item.price.amount, currency: item.product?.variants?.price?.currency })}
                                                         </span>
                                                     </div>
 
@@ -258,13 +266,13 @@ const CartPage = () => {
                                                         {item.product?.description}
                                                     </p>
                                                     {
-                                                        item.product.variants[0].price.amount !== item.price.amount && (
+                                                        item.product.variants.price.amount !== item.price.amount && (
                                                             <>
-                                                                {item.product.variants[0].price.amount > item.price.amount ?
+                                                                {item.product.variants.price.amount > item.price.amount ?
                                                                     <p className="text-md text-red-800 font-light mt-2 max-w-md line-clamp-2">
-                                                                        This product is now more expensive {formatPrice({ amount: item.product.variants[0].price.amount - item.price.amount, currency })}
+                                                                        This product is now more expensive {formatPrice({ amount: item.product.variants.price.amount - item.price.amount, currency: item.product?.variants?.price?.currency })}
                                                                     </p> : <p className="text-md text-green-800 font-light mt-2 max-w-md line-clamp-2">
-                                                                        You have saved {formatPrice({ amount: Math.abs(item.product.variants[0].price.amount - item.price.amount), currency })} on this product
+                                                                        You have saved {formatPrice({ amount: Math.abs(item.product.variants.price.amount - item.price.amount), currency: item.product?.variants?.price?.currency })}
                                                                     </p>}
                                                             </>
                                                         )
@@ -345,7 +353,7 @@ const CartPage = () => {
                                     <div className="w-full h-px bg-[#EBE5DA]" />
 
                                     <div className="flex justify-between items-end">
-                                        <span className="text-[10px] uppercase tracking-[0.2em] text-[#211E1A]" style={mono}>Total</span>
+                                        <span className="text-[14px] uppercase font-bold text-[#211E1A]" style={mono}>Total</span>
                                         <span className="text-2xl text-[#9D782F] font-normal leading-none" style={serif}>
                                             {formattedSubtotal}
                                         </span>

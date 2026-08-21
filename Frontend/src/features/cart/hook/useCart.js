@@ -6,20 +6,13 @@ export const useCart = () => {
     const dispatch = useDispatch()
 
     const handleGetCart = async () => {
-        try {
-            const res = await fetchCart()
-            if (res.success && res.data) {
-                dispatch(setItems(res.data.items))
-            }
-            return res
-        } catch (error) {
-            console.error("Failed to fetch cart:", error)
-        }
+        const res = await fetchCart()
+        dispatch(setItems(res.cart))        
     }
 
-    const handleAddItem = async ({productId, variantId}) => {
+    const handleAddItem = async ({ productId, variantId }) => {
         try {
-            const data = await addItem({productId, variantId})
+            const data = await addItem({ productId, variantId })
             if (data.success) {
                 // Refresh the cart to get the populated product details
                 await handleGetCart()
@@ -31,9 +24,9 @@ export const useCart = () => {
         }
     }
 
-    const handleUpdateItemQty = async ({productId, variantId, quantity}) => {
+    const handleUpdateItemQty = async ({ productId, variantId, quantity }) => {
         try {
-            const res = await updateItemQty({productId, variantId, quantity})
+            const res = await updateItemQty({ productId, variantId, quantity })
             if (res.success && res.data) {
                 dispatch(setItems(res.data.items))
             }
@@ -44,9 +37,9 @@ export const useCart = () => {
         }
     }
 
-    const handleRemoveItem = async ({productId, variantId}) => {
+    const handleRemoveItem = async ({ productId, variantId }) => {
         try {
-            const res = await removeItem({productId, variantId})
+            const res = await removeItem({ productId, variantId })
             if (res.success && res.data) {
                 dispatch(setItems(res.data.items))
             }
@@ -57,20 +50,20 @@ export const useCart = () => {
         }
     }
 
-    const handleIncrementCartItem = async ({productId, variantId}) => {
-        const data = await incrementCartItem({productId, variantId})
-        dispatch(incrementCartItemQty({productId, variantId}))
+    const handleIncrementCartItem = async ({ productId, variantId }) => {
+        const data = await incrementCartItem({ productId, variantId })
+        dispatch(incrementCartItemQty({ productId, variantId }))
     }
 
-    const handleDecrementCartItem = async({productId, variantId}) => {
-        const data = await decrementCartItem({productId, variantId})
-        dispatch(decrementCartItemQty({productId, variantId}))
+    const handleDecrementCartItem = async ({ productId, variantId }) => {
+        const data = await decrementCartItem({ productId, variantId })
+        dispatch(decrementCartItemQty({ productId, variantId }))
     }
 
-    return { 
-        handleGetCart, 
-        handleAddItem, 
-        handleUpdateItemQty, 
+    return {
+        handleGetCart,
+        handleAddItem,
+        handleUpdateItemQty,
         handleRemoveItem,
         handleIncrementCartItem,
         handleDecrementCartItem
