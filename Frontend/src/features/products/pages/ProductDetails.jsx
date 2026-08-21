@@ -12,7 +12,7 @@ import {
     ChevronLeft,
     ChevronRight,
 } from 'lucide-react'
-
+import { useCart } from '../../cart/hook/useCart'
 /* ─────────────────────────────────────────────────────────────
    HELPERS
 ───────────────────────────────────────────────────────────── */
@@ -177,7 +177,7 @@ const ProductDetails = () => {
     const { id } = useParams()
     const navigate = useNavigate()
     const { handleGetAllProducts } = useProducts()
-
+    const { handleAddItem } = useCart()
     const user = useSelector((s) => s.auth.user)
     const allProducts = useSelector((s) => s.product.allProducts) || []
 
@@ -189,6 +189,9 @@ const ProductDetails = () => {
     const [wishlist, setWishlist] = useState([])
     const [selectedAttributes, setSelectedAttributes] = useState({})
     const [selectedVariant, setSelectedVariant] = useState(null)
+console.log("product", product?._id);
+console.log("selectedVariant", selectedVariant?._id);
+
 
     /* ── Fetch single product ── */
     useEffect(() => {
@@ -363,96 +366,6 @@ const ProductDetails = () => {
        SHARED SECTIONS
     ================================================================ */
 
-    function renderHeader() {
-        return (
-            <header className="sticky top-0 z-40 bg-[#F8F5F0]/95 backdrop-blur-md border-b border-[#DDD6CA]">
-                <div className="max-w-[1400px] mx-auto px-6 sm:px-10 lg:px-14">
-                    <div className="h-[72px] flex items-center justify-between">
-                        {/* Brand */}
-                        <Link to="/" className="group shrink-0">
-                            <span
-                                className="text-[15px] tracking-[0.35em] uppercase font-normal text-[#211E1A] group-hover:text-[#9D782F] transition-colors duration-300"
-                                style={serif}
-                            >
-                                Vellique.
-                            </span>
-                        </Link>
-
-                        {/* Navigation */}
-                        <nav className="hidden lg:flex items-center gap-10">
-                            {['COLLECTION', 'NEW ARRIVALS', 'ABOUT'].map((label) => (
-                                <Link
-                                    to="/"
-                                    key={label}
-                                    className="text-[9px] uppercase tracking-[0.2em] text-[#756E63] hover:text-[#9D782F] transition-colors duration-300"
-                                    style={mono}
-                                >
-                                    {label}
-                                </Link>
-                            ))}
-                        </nav>
-
-                        {/* Actions */}
-                        <div className="flex items-center gap-5">
-                            {user?.role === 'seller' && (
-                                <Link
-                                    to="/seller/dashboard"
-                                    className="hidden sm:inline-flex items-center gap-1.5 text-[9px] uppercase tracking-[0.18em] text-[#9D782F] border border-[#9D782F]/30 px-4 py-2 hover:bg-[#9D782F] hover:text-white transition-all duration-300"
-                                    style={mono}
-                                >
-                                    <Sparkles className="w-3 h-3" />
-                                    Seller Studio
-                                </Link>
-                            )}
-
-                            {user ? (
-                                <div className="flex items-center gap-4">
-                                    <span
-                                        className="text-[11px] text-[#756E63] font-light hidden md:inline"
-                                        style={sans}
-                                    >
-                                        Welcome,{' '}
-                                        <span className="text-[#211E1A] font-medium">
-                                            {user.fullName || user.email?.split('@')[0]}
-                                        </span>
-                                    </span>
-
-                                    {user.role === 'seller' && (
-                                        <Link
-                                            to="/seller/dashboard"
-                                            className="sm:hidden p-2 text-[#9D782F] border border-[#DDD6CA]"
-                                            title="Seller Dashboard"
-                                        >
-                                            <Sparkles className="w-4 h-4" />
-                                        </Link>
-                                    )}
-                                </div>
-                            ) : (
-                                <div className="flex items-center gap-4">
-                                    <Link
-                                        to="/login"
-                                        className="text-[9px] uppercase tracking-[0.18em] text-[#211E1A] hover:text-[#9D782F] transition-colors duration-300"
-                                        style={mono}
-                                    >
-                                        Sign In
-                                    </Link>
-
-                                    <Link
-                                        to="/register"
-                                        className="px-5 py-2.5 bg-[#211E1A] hover:bg-[#302C27] text-white text-[9px] uppercase tracking-[0.18em] transition-colors duration-300"
-                                        style={mono}
-                                    >
-                                        Register
-                                    </Link>
-                                </div>
-                            )}
-                        </div>
-                    </div>
-                </div>
-            </header>
-        )
-    }
-
     function renderFooter() {
         return (
             <footer className="border-t border-[#DDD6CA] bg-[#F3EFEA]">
@@ -585,7 +498,6 @@ const ProductDetails = () => {
                     className="min-h-screen flex flex-col selection:bg-[#9D782F]/20"
                     style={{ backgroundColor: '#F8F5F0', ...sans }}
                 >
-                    {renderHeader()}
 
                     <div className="grow flex items-center justify-center px-6">
                         <div className="text-center max-w-md py-32">
@@ -637,7 +549,6 @@ const ProductDetails = () => {
                     className="min-h-screen flex flex-col selection:bg-[#9D782F]/20"
                     style={{ backgroundColor: '#F8F5F0', ...sans }}
                 >
-                    {renderHeader()}
 
                     <div className="grow flex items-center justify-center px-6">
                         <div className="text-center max-w-md py-32">
@@ -693,7 +604,6 @@ const ProductDetails = () => {
                 {/* ─────────────────────────────────────────────────────
                     1. HEADER
                 ───────────────────────────────────────────────────── */}
-                {renderHeader()}
 
                 {/* ─────────────────────────────────────────────────────
                     2. BREADCRUMB
@@ -1000,6 +910,9 @@ const ProductDetails = () => {
                                                         ? 'Select options'
                                                         : 'Add to bag'
                                             }
+                                            onClick={() => {
+                                                handleAddItem({productId: product?._id, variantId: selectedVariant?._id})
+                                            }}
                                         >
                                             {addToBagState === 'soldout' ? (
                                                 'Sold Out'

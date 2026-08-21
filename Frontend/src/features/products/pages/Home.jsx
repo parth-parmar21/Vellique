@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { useProducts } from '../hook/useProduct'
 import { Link, useNavigate } from 'react-router-dom'
 import {
@@ -15,6 +15,7 @@ import {
     Check,
     SlidersHorizontal,
 } from 'lucide-react'
+import { useCart } from '../../cart/hook/useCart'
 
 const CURRENCY_SYMBOLS = {
     INR: '₹',
@@ -51,13 +52,15 @@ const formatDate = (isoString) => {
 }
 
 const Home = () => {
-    const { handleGetAllProducts, handleGetProductById } = useProducts()
+    const { handleGetAllProducts } = useProducts()
+    const { handleGetCart } = useCart()
+    const dispatch = useDispatch()
 
     const products = useSelector((state) => state.product.allProducts) || []
     const user = useSelector((state) => state.auth.user)
+    const searchQuery = useSelector((state) => state.product.searchQuery) || ''
 
     const [loading, setLoading] = useState(true)
-    const [searchTerm, setSearchTerm] = useState('')
     const [sortBy, setSortBy] = useState('newest')
     const [selectedProduct, setSelectedProduct] = useState(null)
     const [selectedModalImage, setSelectedModalImage] = useState(0)
@@ -88,6 +91,12 @@ const Home = () => {
         }
     }, [])
 
+    useEffect(() => {
+        if (user) {
+            handleGetCart()
+        }
+    }, [user])
+
     const toggleWishlist = (id, e) => {
         if (e) e.stopPropagation()
 
@@ -98,9 +107,9 @@ const Home = () => {
         )
     }
 
-    // Filter Products
+    // Filter Products using Redux searchQuery
     const filteredProducts = products.filter((product) => {
-        const query = searchTerm.toLowerCase().trim()
+        const query = searchQuery.toLowerCase().trim()
 
         if (!query) return true
 
@@ -155,118 +164,7 @@ const Home = () => {
                     backgroundColor: '#F8F5F0',
                     fontFamily: "'Inter', sans-serif",
                 }}
-            >
-                {/* =====================================================
-                    1. NAVIGATION
-                ====================================================== */}
-                <header className="sticky top-0 z-40 bg-[#F8F5F0]/95 backdrop-blur-md border-b border-[#DDD6CA]">
-                    <div className="max-w-[1400px] mx-auto px-6 sm:px-10 lg:px-14">
-                        <div className="h-[72px] flex items-center justify-between">
-
-                            {/* Brand */}
-                            <Link to="/" className="group shrink-0">
-                                <span
-                                    className="text-[15px] tracking-[0.35em] uppercase font-normal text-[#211E1A] group-hover:text-[#9D782F] transition-colors duration-300"
-                                    style={{
-                                        fontFamily:
-                                            "'Cormorant Garamond', serif",
-                                    }}
-                                >
-                                    Vellique.
-                                </span>
-                            </Link>
-
-                            {/* Navigation Links */}
-                            <nav className="hidden lg:flex items-center gap-10">
-                                {[
-                                    'COLLECTION',
-                                    'NEW ARRIVALS',
-                                    'ABOUT',
-                                ].map((label) => (
-                                    <span
-                                        key={label}
-                                        className="text-[9px] uppercase tracking-[0.2em] text-[#756E63] hover:text-[#9D782F] transition-colors duration-300 cursor-pointer"
-                                        style={{
-                                            fontFamily:
-                                                "'DM Mono', monospace",
-                                        }}
-                                    >
-                                        {label}
-                                    </span>
-                                ))}
-                            </nav>
-
-                            {/* Actions */}
-                            <div className="flex items-center gap-5">
-                                {user?.role === 'seller' && (
-                                    <Link
-                                        to="/seller/dashboard"
-                                        className="hidden sm:inline-flex items-center gap-1.5 text-[9px] uppercase tracking-[0.18em] text-[#9D782F] border border-[#9D782F]/30 px-4 py-2 hover:bg-[#9D782F] hover:text-white transition-all duration-300"
-                                        style={{
-                                            fontFamily:
-                                                "'DM Mono', monospace",
-                                        }}
-                                    >
-                                        <Sparkles className="w-3 h-3" />
-                                        Seller Studio
-                                    </Link>
-                                )}
-
-                                {user ? (
-                                    <div className="flex items-center gap-4">
-                                        <span
-                                            className="text-[11px] text-[#756E63] font-light hidden md:inline"
-                                            style={{
-                                                fontFamily:
-                                                    "'Inter', sans-serif",
-                                            }}
-                                        >
-                                            Welcome,{' '}
-                                            <span className="text-[#211E1A] font-medium">
-                                                {user.fullName ||
-                                                    user.email?.split('@')[0]}
-                                            </span>
-                                        </span>
-
-                                        {user.role === 'seller' && (
-                                            <Link
-                                                to="/seller/dashboard"
-                                                className="sm:hidden p-2 text-[#9D782F] border border-[#DDD6CA]"
-                                                title="Seller Dashboard"
-                                            >
-                                                <Sparkles className="w-4 h-4" />
-                                            </Link>
-                                        )}
-                                    </div>
-                                ) : (
-                                    <div className="flex items-center gap-4">
-                                        <Link
-                                            to="/login"
-                                            className="text-[9px] uppercase tracking-[0.18em] text-[#211E1A] hover:text-[#9D782F] transition-colors duration-300"
-                                            style={{
-                                                fontFamily:
-                                                    "'DM Mono', monospace",
-                                            }}
-                                        >
-                                            Sign In
-                                        </Link>
-
-                                        <Link
-                                            to="/register"
-                                            className="px-5 py-2.5 bg-[#211E1A] hover:bg-[#302C27] text-white text-[9px] uppercase tracking-[0.18em] transition-colors duration-300"
-                                            style={{
-                                                fontFamily:
-                                                    "'DM Mono', monospace",
-                                            }}
-                                        >
-                                            Register
-                                        </Link>
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                    </div>
-                </header>
+            > 
 
                 {/* =====================================================
                     2. EDITORIAL HERO
@@ -365,32 +263,14 @@ const Home = () => {
                 <div className="border-b border-[#EBE5DA]">
                     <div className="max-w-[1400px] mx-auto px-6 sm:px-10 lg:px-14 py-5 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
 
-                        {/* Search */}
-                        <div className="relative w-full sm:w-80">
-                            <Search className="w-3.5 h-3.5 absolute left-0 top-1/2 -translate-y-1/2 text-[#999083]" />
-
-                            <input
-                                type="text"
-                                placeholder="Search the collection..."
-                                value={searchTerm}
-                                onChange={(e) =>
-                                    setSearchTerm(e.target.value)
-                                }
-                                className="w-full bg-transparent border-b border-[#DDD6CA] focus:border-[#9D782F] pl-6 pr-8 py-2.5 text-[12px] text-[#211E1A] placeholder-[#999083] outline-none transition-colors duration-300"
-                                style={{
-                                    fontFamily:
-                                        "'Inter', sans-serif",
-                                }}
-                            />
-
-                            {searchTerm && (
-                                <button
-                                    onClick={() => setSearchTerm('')}
-                                    className="absolute right-0 top-1/2 -translate-y-1/2 text-[#999083] hover:text-[#211E1A] transition-colors"
-                                >
-                                    <X className="w-3.5 h-3.5" />
-                                </button>
-                            )}
+                        {/* Search Status */}
+                        <div>
+                            <span
+                                className="text-[10px] uppercase tracking-[0.25em] text-[#9D782F]"
+                                style={{ fontFamily: "'DM Mono', monospace" }}
+                            >
+                                {searchQuery ? `Search results for "${searchQuery}"` : "01 / The Collection"}
+                            </span>
                         </div>
 
                         {/* Right Controls */}
@@ -501,20 +381,20 @@ const Home = () => {
                                             "'Cormorant Garamond', serif",
                                     }}
                                 >
-                                    {searchTerm
+                                    {searchQuery
                                         ? 'No pieces found.'
                                         : 'The catalog is empty.'}
                                 </h3>
 
                                 <p className="text-[12px] text-[#756E63] font-light mb-10 leading-relaxed">
-                                    {searchTerm
-                                        ? `Nothing matches "${searchTerm}". Try adjusting your search.`
+                                    {searchQuery
+                                        ? `Nothing matches "${searchQuery}". Try adjusting your search.`
                                         : 'New collections are being curated. Please check back soon.'}
                                 </p>
 
-                                {searchTerm && (
+                                {searchQuery && (
                                     <button
-                                        onClick={() => setSearchTerm('')}
+                                        onClick={() => dispatch(setSearchQuery(''))}
                                         className="text-[9px] uppercase tracking-[0.22em] text-[#211E1A] border-b border-[#211E1A] pb-1 hover:text-[#9D782F] hover:border-[#9D782F] transition-colors duration-300"
                                         style={{
                                             fontFamily:

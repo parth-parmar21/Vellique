@@ -5,7 +5,8 @@ const productSlice = createSlice({
     initialState: {
         sellerProducts: [],
         allProducts: [],
-        isLoading: false
+        isLoading: false,
+        searchQuery: ""
     },
     reducers: {
         setSellerProduct: (state, action) => {
@@ -14,9 +15,11 @@ const productSlice = createSlice({
         setProducts: (state, action) => {
             state.allProducts = action.payload
         },
-
+        setSearchQuery: (state, action) => {
+            state.searchQuery = action.payload
+        }
     }
 })
 
-export const { setSellerProduct, setProducts } = productSlice.actions
+export const { setSellerProduct, setProducts, setSearchQuery } = productSlice.actions
 export default productSlice.reducer
